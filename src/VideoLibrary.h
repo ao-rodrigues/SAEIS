@@ -3,8 +3,7 @@
 #include "ofMain.h"
 #include "Player.hpp"
 
-class VideoLibrary
-{
+class VideoLibrary {
     const string dir_path = "videos/";
     const string video_ext = ".mov";
     const float PADDING = 50.0;
@@ -18,7 +17,9 @@ class VideoLibrary
     
 public:
     VideoLibrary();
-    ~VideoLibrary();
+    ~VideoLibrary() {
+        delete videoPlayer;
+    }
     void update();
     void draw();
     void key_pressed(int key);

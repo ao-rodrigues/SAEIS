@@ -1,8 +1,7 @@
 #pragma once
 #include "ofMain.h"
 
-class Player
-{
+class Player {
     ofVideoPlayer player;
     string path;
     
@@ -21,9 +20,7 @@ class Player
     
     
 public:
-    Player(string path, float xPos = 0, float yPos = 0,
-           float width = 1024, float height = 768);
-    ~Player();
+    Player(string path, float xPos = 0, float yPos = 0, float width = 1024, float height = 768);
     void loadVideo(string path);
     void keyPress(int key);
     void draw();

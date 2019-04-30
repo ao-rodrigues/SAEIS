@@ -1,11 +1,6 @@
 #include "Player.hpp"
 
-Player::Player(string path,
-               float xPos,
-               float yPos,
-               float width,
-               float height)
-{
+Player::Player(string path, float xPos, float yPos, float width, float height) {
     this->path = path;
     this->player = ofVideoPlayer();
     this->playerWidth = width;
@@ -18,14 +13,8 @@ Player::Player(string path,
     loadVideo(this->path);
 }
 
-Player::~Player()
-{
-}
-
-void Player::loadVideo(const string path)
-{
-    if (player.isLoaded())
-    {
+void Player::loadVideo(const string path) {
+    if (player.isLoaded()) {
         player.closeMovie();
     }
     
@@ -37,25 +26,16 @@ void Player::loadVideo(const string path)
     float proportion;
     
     
-    if (playerHeight > playerWidth)
-    {
-        if (videoWidth >= videoHeight)
-        {
+    if (playerHeight > playerWidth) {
+        if (videoWidth >= videoHeight) {
             proportion = playerWidth / videoWidth;
-        }
-        else
-        {
+        } else {
             proportion = playerHeight / videoHeight;
         }
-    }
-    else
-    {
-        if (videoWidth <= videoHeight)
-        {
+    } else {
+        if (videoWidth <= videoHeight) {
             proportion = playerHeight / videoHeight;
-        }
-        else
-        {
+        } else {
             proportion = playerWidth / videoWidth;
         }
     }
@@ -66,11 +46,9 @@ void Player::loadVideo(const string path)
     // player.play();
 }
 
-void Player::keyPress(int key)
-{
+void Player::keyPress(int key) {
     float fps = player.getSpeed();
-    switch (key)
-    {
+    switch (key) {
             // play / pause
         case OF_KEY_F1:
             player.setPaused(player.isPlaying());
@@ -89,8 +67,7 @@ void Player::keyPress(int key)
     }
 }
 
-void Player::draw()
-{
+void Player::draw() {
     ofSetColor(ofColor::white);
     player.draw(playerXPosition,
                 playerYPosition,
@@ -98,7 +75,6 @@ void Player::draw()
                 videoHeight);
 }
 
-void Player::update()
-{
+void Player::update() {
     player.update();
 }

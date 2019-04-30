@@ -1,8 +1,7 @@
 #include "VideoLibrary.h"
 #include "ofApp.h"
 
-VideoLibrary::VideoLibrary()
-{
+VideoLibrary::VideoLibrary() {
     ofBackground(ofColor::white);
     ofSetVerticalSync(true);
     
@@ -12,53 +11,37 @@ VideoLibrary::VideoLibrary()
     dir.sort();
     
     
-    if (dir.size() > 0)
-    {
+    if (dir.size() > 0) {
         videoPaths.reserve(dir.size());
-        for (size_t i = 0; i < dir.size(); i++)
-        {
+        for (size_t i = 0; i < dir.size(); i++) {
             videoPaths.push_back(dir.getPath(i));
         }
         
         // Default player dimensions for now
         //videoPlayer = std::make_unique<Player>(new Player(videoPaths[0]));
-        videoPlayer =
-        new Player(videoPaths[0],
-                   ofApp::WINDOW_WIDTH / 2.0,
-                   PADDING,
-                   (ofApp::WINDOW_WIDTH / 2.0) - PADDING,
-                   ofApp::WINDOW_HEIGHT - PADDING);
-    }
-    else
-    {
+        videoPlayer = new Player(videoPaths[0],
+                           ofApp::WINDOW_WIDTH / 2.0,
+                           PADDING,
+                           (ofApp::WINDOW_WIDTH / 2.0) - PADDING,
+                           ofApp::WINDOW_HEIGHT - PADDING);
+    } else {
         exit(-1);
     }
 }
 
-
-VideoLibrary::~VideoLibrary()
-{
-}
-
-void VideoLibrary::update()
-{
+void VideoLibrary::update() {
     videoPlayer->update();
 }
 
-void VideoLibrary::draw()
-{
+void VideoLibrary::draw() {
     videoPlayer->draw();
     
     ofSetColor(ofColor::gray);
     
-    for (size_t i = 0; i < dir.size(); i++)
-    {
-        if (i == currentVideoIdx)
-        {
+    for (size_t i = 0; i < dir.size(); i++) {
+        if (i == currentVideoIdx) {
             ofSetColor(ofColor::red);
-        }
-        else
-        {
+        } else {
             ofSetColor(ofColor::black);
         }
         
@@ -67,12 +50,9 @@ void VideoLibrary::draw()
     }
 }
 
-void VideoLibrary::key_pressed(int key)
-{
-    if (dir.size() > 0)
-    {
-        switch (key)
-        {
+void VideoLibrary::key_pressed(int key) {
+    if (dir.size() > 0) {
+        switch (key) {
             case OF_KEY_UP:
                 currentVideoIdx--;
                 videoPlayer->loadVideo(videoPaths[currentVideoIdx]);
