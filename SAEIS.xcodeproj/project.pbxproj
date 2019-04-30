@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BAE475B22277BCA900F9EFAC /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475AD2277BCA900F9EFAC /* ofApp.cpp */; };
-		BAE475B32277BCA900F9EFAC /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475AE2277BCA900F9EFAC /* Player.cpp */; };
-		BAE475B42277BCA900F9EFAC /* VideoLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475AF2277BCA900F9EFAC /* VideoLibrary.cpp */; };
-		BAE475B52277BCA900F9EFAC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475B02277BCA900F9EFAC /* main.cpp */; };
+		BAE475B72277C7F000F9EFAC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475B62277C7F000F9EFAC /* main.cpp */; };
+		BAE475BC2277C85B00F9EFAC /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475BA2277C85B00F9EFAC /* ofApp.cpp */; };
+		BAE475C02277C8C000F9EFAC /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475BE2277C8C000F9EFAC /* Player.cpp */; };
+		BAE475C22277C8EA00F9EFAC /* VideoLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,13 +26,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		BAE475AB2277BCA900F9EFAC /* VideoLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoLibrary.h; path = ../../../saeis/src/VideoLibrary.h; sourceTree = "<group>"; };
-		BAE475AC2277BCA900F9EFAC /* Player.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Player.hpp; path = ../../../saeis/src/Player.hpp; sourceTree = "<group>"; };
-		BAE475AD2277BCA900F9EFAC /* ofApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofApp.cpp; path = ../../../saeis/src/ofApp.cpp; sourceTree = "<group>"; };
-		BAE475AE2277BCA900F9EFAC /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Player.cpp; path = ../../../saeis/src/Player.cpp; sourceTree = "<group>"; };
-		BAE475AF2277BCA900F9EFAC /* VideoLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VideoLibrary.cpp; path = ../../../saeis/src/VideoLibrary.cpp; sourceTree = "<group>"; };
-		BAE475B02277BCA900F9EFAC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../../saeis/src/main.cpp; sourceTree = "<group>"; };
-		BAE475B12277BCA900F9EFAC /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofApp.h; path = ../../../saeis/src/ofApp.h; sourceTree = "<group>"; };
+		BAE475B62277C7F000F9EFAC /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		BAE475BA2277C85B00F9EFAC /* ofApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
+		BAE475BD2277C88C00F9EFAC /* ofApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
+		BAE475BE2277C8C000F9EFAC /* Player.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
+		BAE475BF2277C8C000F9EFAC /* Player.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Player.hpp; sourceTree = "<group>"; };
+		BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VideoLibrary.cpp; sourceTree = "<group>"; };
+		BAE475C32277C90800F9EFAC /* VideoLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoLibrary.h; sourceTree = "<group>"; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
 		E42962AE2163EDD300A6A9E2 /* ofNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofNode.h; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofNode.h; sourceTree = SOURCE_ROOT; };
@@ -536,13 +536,13 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				BAE475B02277BCA900F9EFAC /* main.cpp */,
-				BAE475AD2277BCA900F9EFAC /* ofApp.cpp */,
-				BAE475B12277BCA900F9EFAC /* ofApp.h */,
-				BAE475AE2277BCA900F9EFAC /* Player.cpp */,
-				BAE475AC2277BCA900F9EFAC /* Player.hpp */,
-				BAE475AF2277BCA900F9EFAC /* VideoLibrary.cpp */,
-				BAE475AB2277BCA900F9EFAC /* VideoLibrary.h */,
+				BAE475B62277C7F000F9EFAC /* main.cpp */,
+				BAE475BA2277C85B00F9EFAC /* ofApp.cpp */,
+				BAE475BD2277C88C00F9EFAC /* ofApp.h */,
+				BAE475BE2277C8C000F9EFAC /* Player.cpp */,
+				BAE475BF2277C8C000F9EFAC /* Player.hpp */,
+				BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */,
+				BAE475C32277C90800F9EFAC /* VideoLibrary.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -645,10 +645,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BAE475B42277BCA900F9EFAC /* VideoLibrary.cpp in Sources */,
-				BAE475B32277BCA900F9EFAC /* Player.cpp in Sources */,
-				BAE475B52277BCA900F9EFAC /* main.cpp in Sources */,
-				BAE475B22277BCA900F9EFAC /* ofApp.cpp in Sources */,
+				BAE475BC2277C85B00F9EFAC /* ofApp.cpp in Sources */,
+				BAE475C22277C8EA00F9EFAC /* VideoLibrary.cpp in Sources */,
+				BAE475B72277C7F000F9EFAC /* main.cpp in Sources */,
+				BAE475C02277C8C000F9EFAC /* Player.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
