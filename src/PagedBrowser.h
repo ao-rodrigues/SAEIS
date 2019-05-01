@@ -1,10 +1,10 @@
-#ifndef Paged_Browser_h
-#define Paged_Browser_h
-#endif /* Paged_Browser_h */
-
 #pragma once
 
 #include "ofMain.h"
+
+#define INNER_PADDING_SIDES 20
+#define ELEMENTS_DISTANCE_X 10
+#define ELEMENTS_DISTANCE_Y 15
 
 template <class T>
 class PagedBrowser {
@@ -13,8 +13,15 @@ class PagedBrowser {
     float elementW;
     float elementH;
     
+    int elementsPerLine;
+    int elementsPerCol;
+    int numPages;
+    
     std::vector<std::unique_ptr<T>> elements;
     
+    ofVec2f clickedPoint;
+    
 public:
-    Paged_Browser(float w, float h, float elW, float elH, std::vector<std::unique_ptr<T>> els);
-}
+    PagedBrowser(float w, float h, float elW, float elH, std::vector<std::unique_ptr<T>> els);
+    void draw();
+};
