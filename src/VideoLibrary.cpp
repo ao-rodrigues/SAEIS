@@ -18,12 +18,11 @@ VideoLibrary::VideoLibrary() {
         }
         
         // Default player dimensions for now
-        //videoPlayer = std::make_unique<Player>(new Player(videoPaths[0]));
-        videoPlayer = new Player(videoPaths[0],
-                           ofApp::WINDOW_WIDTH / 2.0,
-                           PADDING,
-                           (ofApp::WINDOW_WIDTH / 2.0) - PADDING,
-                           ofApp::WINDOW_HEIGHT - PADDING);
+        videoPlayer = std::make_unique<Player>(Player(videoPaths[0],
+                                               ofApp::WINDOW_WIDTH / 2.0,
+                                               PADDING,
+                                               (ofApp::WINDOW_WIDTH / 2.0) - PADDING,
+                                               ofApp::WINDOW_HEIGHT - PADDING));
     } else {
         exit(-1);
     }

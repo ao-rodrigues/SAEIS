@@ -33,6 +33,7 @@
 		BAE475BF2277C8C000F9EFAC /* Player.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Player.hpp; sourceTree = "<group>"; };
 		BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VideoLibrary.cpp; sourceTree = "<group>"; };
 		BAE475C32277C90800F9EFAC /* VideoLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoLibrary.h; sourceTree = "<group>"; };
+		BAE475C42279C46D00F9EFAC /* PagedBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PagedBrowser.h; sourceTree = "<group>"; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
 		E42962AE2163EDD300A6A9E2 /* ofNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofNode.h; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofNode.h; sourceTree = SOURCE_ROOT; };
@@ -543,6 +544,7 @@
 				BAE475BF2277C8C000F9EFAC /* Player.hpp */,
 				BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */,
 				BAE475C32277C90800F9EFAC /* VideoLibrary.h */,
+				BAE475C42279C46D00F9EFAC /* PagedBrowser.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

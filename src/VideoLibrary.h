@@ -12,14 +12,10 @@ class VideoLibrary {
     
     ofDirectory dir;
     std::vector<string> videoPaths;
-    //std::unique_ptr<Player> videoPlayer;
-    Player *videoPlayer;
+    std::unique_ptr<Player> videoPlayer;
     
 public:
     VideoLibrary();
-    ~VideoLibrary() {
-        delete videoPlayer;
-    }
     void update();
     void draw();
     void key_pressed(int key);
