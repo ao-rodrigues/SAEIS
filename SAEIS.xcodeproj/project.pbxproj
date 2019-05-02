@@ -11,8 +11,9 @@
 		BAE475BC2277C85B00F9EFAC /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475BA2277C85B00F9EFAC /* ofApp.cpp */; };
 		BAE475C02277C8C000F9EFAC /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475BE2277C8C000F9EFAC /* Player.cpp */; };
 		BAE475C22277C8EA00F9EFAC /* VideoLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */; };
-		BAE475C62279CA8100F9EFAC /* PagedBrowser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475C52279CA8100F9EFAC /* PagedBrowser.cpp */; };
 		BAE475C92279D4B600F9EFAC /* Thumbnail.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475C82279D4B600F9EFAC /* Thumbnail.cpp */; };
+		BAE475CB227A15CF00F9EFAC /* VideoBrowser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475CA227A15CE00F9EFAC /* VideoBrowser.cpp */; };
+		BAE47605227A2BF900F9EFAC /* TextToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE47604227A2BF900F9EFAC /* TextToggle.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,10 +36,33 @@
 		BAE475BF2277C8C000F9EFAC /* Player.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Player.hpp; sourceTree = "<group>"; };
 		BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VideoLibrary.cpp; sourceTree = "<group>"; };
 		BAE475C32277C90800F9EFAC /* VideoLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoLibrary.h; sourceTree = "<group>"; };
-		BAE475C42279C46D00F9EFAC /* PagedBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PagedBrowser.h; sourceTree = "<group>"; };
-		BAE475C52279CA8100F9EFAC /* PagedBrowser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PagedBrowser.cpp; sourceTree = "<group>"; };
+		BAE475C42279C46D00F9EFAC /* VideoBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoBrowser.h; sourceTree = "<group>"; };
 		BAE475C72279D41400F9EFAC /* Thumbnail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Thumbnail.h; sourceTree = "<group>"; };
 		BAE475C82279D4B600F9EFAC /* Thumbnail.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Thumbnail.cpp; sourceTree = "<group>"; };
+		BAE475CA227A15CE00F9EFAC /* VideoBrowser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoBrowser.cpp; sourceTree = "<group>"; };
+		BAE475EE227A270200F9EFAC /* ofxGuiGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxGuiGroup.h; sourceTree = "<group>"; };
+		BAE475EF227A270200F9EFAC /* ofxBaseGui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBaseGui.cpp; sourceTree = "<group>"; };
+		BAE475F0227A270200F9EFAC /* ofxColorPicker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxColorPicker.cpp; sourceTree = "<group>"; };
+		BAE475F1227A270200F9EFAC /* ofxSliderGroup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSliderGroup.cpp; sourceTree = "<group>"; };
+		BAE475F2227A270200F9EFAC /* ofxToggle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxToggle.cpp; sourceTree = "<group>"; };
+		BAE475F3227A270200F9EFAC /* ofxButton.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxButton.cpp; sourceTree = "<group>"; };
+		BAE475F4227A270200F9EFAC /* ofxGuiGroup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGuiGroup.cpp; sourceTree = "<group>"; };
+		BAE475F5227A270200F9EFAC /* ofxInputField.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxInputField.cpp; sourceTree = "<group>"; };
+		BAE475F6227A270200F9EFAC /* ofxToggle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxToggle.h; sourceTree = "<group>"; };
+		BAE475F7227A270200F9EFAC /* ofxLabel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxLabel.cpp; sourceTree = "<group>"; };
+		BAE475F8227A270200F9EFAC /* ofxSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxSlider.h; sourceTree = "<group>"; };
+		BAE475F9227A270200F9EFAC /* ofxGui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxGui.h; sourceTree = "<group>"; };
+		BAE475FA227A270200F9EFAC /* ofxBaseGui.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxBaseGui.h; sourceTree = "<group>"; };
+		BAE475FB227A270200F9EFAC /* ofxButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxButton.h; sourceTree = "<group>"; };
+		BAE475FC227A270200F9EFAC /* ofxLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxLabel.h; sourceTree = "<group>"; };
+		BAE475FD227A270200F9EFAC /* ofxInputField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxInputField.h; sourceTree = "<group>"; };
+		BAE475FE227A270200F9EFAC /* ofxSliderGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxSliderGroup.h; sourceTree = "<group>"; };
+		BAE475FF227A270200F9EFAC /* ofxPanel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxPanel.cpp; sourceTree = "<group>"; };
+		BAE47600227A270200F9EFAC /* ofxSlider.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSlider.cpp; sourceTree = "<group>"; };
+		BAE47601227A270200F9EFAC /* ofxColorPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxColorPicker.h; sourceTree = "<group>"; };
+		BAE47602227A270200F9EFAC /* ofxPanel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxPanel.h; sourceTree = "<group>"; };
+		BAE47603227A2AC600F9EFAC /* TextToggle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextToggle.h; sourceTree = "<group>"; };
+		BAE47604227A2BF900F9EFAC /* TextToggle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TextToggle.cpp; sourceTree = "<group>"; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
 		E42962AE2163EDD300A6A9E2 /* ofNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofNode.h; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofNode.h; sourceTree = SOURCE_ROOT; };
@@ -237,9 +261,46 @@
 			name = local_addons;
 			sourceTree = "<group>";
 		};
+		BAE475EC227A270200F9EFAC /* ofxGui */ = {
+			isa = PBXGroup;
+			children = (
+				BAE475ED227A270200F9EFAC /* src */,
+			);
+			path = ofxGui;
+			sourceTree = "<group>";
+		};
+		BAE475ED227A270200F9EFAC /* src */ = {
+			isa = PBXGroup;
+			children = (
+				BAE475EE227A270200F9EFAC /* ofxGuiGroup.h */,
+				BAE475EF227A270200F9EFAC /* ofxBaseGui.cpp */,
+				BAE475F0227A270200F9EFAC /* ofxColorPicker.cpp */,
+				BAE475F1227A270200F9EFAC /* ofxSliderGroup.cpp */,
+				BAE475F2227A270200F9EFAC /* ofxToggle.cpp */,
+				BAE475F3227A270200F9EFAC /* ofxButton.cpp */,
+				BAE475F4227A270200F9EFAC /* ofxGuiGroup.cpp */,
+				BAE475F5227A270200F9EFAC /* ofxInputField.cpp */,
+				BAE475F6227A270200F9EFAC /* ofxToggle.h */,
+				BAE475F7227A270200F9EFAC /* ofxLabel.cpp */,
+				BAE475F8227A270200F9EFAC /* ofxSlider.h */,
+				BAE475F9227A270200F9EFAC /* ofxGui.h */,
+				BAE475FA227A270200F9EFAC /* ofxBaseGui.h */,
+				BAE475FB227A270200F9EFAC /* ofxButton.h */,
+				BAE475FC227A270200F9EFAC /* ofxLabel.h */,
+				BAE475FD227A270200F9EFAC /* ofxInputField.h */,
+				BAE475FE227A270200F9EFAC /* ofxSliderGroup.h */,
+				BAE475FF227A270200F9EFAC /* ofxPanel.cpp */,
+				BAE47600227A270200F9EFAC /* ofxSlider.cpp */,
+				BAE47601227A270200F9EFAC /* ofxColorPicker.h */,
+				BAE47602227A270200F9EFAC /* ofxPanel.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				BAE475EC227A270200F9EFAC /* ofxGui */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -549,10 +610,12 @@
 				BAE475BF2277C8C000F9EFAC /* Player.hpp */,
 				BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */,
 				BAE475C32277C90800F9EFAC /* VideoLibrary.h */,
-				BAE475C42279C46D00F9EFAC /* PagedBrowser.h */,
-				BAE475C52279CA8100F9EFAC /* PagedBrowser.cpp */,
+				BAE475C42279C46D00F9EFAC /* VideoBrowser.h */,
+				BAE475CA227A15CE00F9EFAC /* VideoBrowser.cpp */,
 				BAE475C72279D41400F9EFAC /* Thumbnail.h */,
 				BAE475C82279D4B600F9EFAC /* Thumbnail.cpp */,
+				BAE47603227A2AC600F9EFAC /* TextToggle.h */,
+				BAE47604227A2BF900F9EFAC /* TextToggle.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -656,11 +719,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAE475BC2277C85B00F9EFAC /* ofApp.cpp in Sources */,
-				BAE475C62279CA8100F9EFAC /* PagedBrowser.cpp in Sources */,
+				BAE475CB227A15CF00F9EFAC /* VideoBrowser.cpp in Sources */,
 				BAE475C22277C8EA00F9EFAC /* VideoLibrary.cpp in Sources */,
 				BAE475B72277C7F000F9EFAC /* main.cpp in Sources */,
 				BAE475C92279D4B600F9EFAC /* Thumbnail.cpp in Sources */,
 				BAE475C02277C8C000F9EFAC /* Player.cpp in Sources */,
+				BAE47605227A2BF900F9EFAC /* TextToggle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

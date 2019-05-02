@@ -5,9 +5,10 @@
 #include "ofMain.h"
 
 #define NAME_HEIGHT 10
+#define BORDER_WIDTH 5
 
 class Thumbnail {
-    ofEvent<ofVec2f> clickedInside;
+    float xPos, yPos;
     
     float width, height;
     
@@ -16,7 +17,21 @@ class Thumbnail {
     
     ofColor textColor;
     
+    bool selected;
+    
 public:
-    Thumbnail(float w, float h, ofImage img, string name, ofColor txtColor);
-    void draw(float x, float y);
+    ofEvent<ofVec2f> clickedInside;
+    
+    Thumbnail(float x, float y, float w, float h, ofImage img, string name, ofColor txtColor);
+    void draw();
+    
+    void mouseMoved(ofMouseEventArgs & args);
+    void mouseDragged(ofMouseEventArgs & args);
+    void mousePressed(ofMouseEventArgs & args);
+    void mouseReleased(ofMouseEventArgs & args);
+    void mouseScrolled(ofMouseEventArgs & args);
+    void mouseEntered(ofMouseEventArgs & args);
+    void mouseExited(ofMouseEventArgs & args);
+    
+    bool inside(float x, float y);
 };

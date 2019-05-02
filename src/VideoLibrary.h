@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "Player.hpp"
+#include "VideoBrowser.h"
 
 class VideoLibrary {
     const string dir_path = "videos/";
@@ -13,6 +14,8 @@ class VideoLibrary {
     ofDirectory dir;
     std::vector<string> videoPaths;
     std::unique_ptr<Player> videoPlayer;
+    
+    std::unique_ptr<VideoBrowser> videoBrowser;
     
 public:
     VideoLibrary();

@@ -17,6 +17,8 @@ VideoLibrary::VideoLibrary() {
             videoPaths.push_back(dir.getPath(i));
         }
         
+        videoBrowser = std::make_unique<VideoBrowser>(VideoBrowser(50, 50, 200, 800, 200, 200, videoPaths));
+        
         // Default player dimensions for now
         videoPlayer = std::make_unique<Player>(Player(videoPaths[0],
                                                ofApp::WINDOW_WIDTH / 2.0,
@@ -33,10 +35,13 @@ void VideoLibrary::update() {
 }
 
 void VideoLibrary::draw() {
-    videoPlayer->draw();
+    videoBrowser->draw();
     
-    ofSetColor(ofColor::gray);
+    //videoPlayer->draw();
     
+    //ofSetColor(ofColor::gray);
+    
+    /*
     for (size_t i = 0; i < dir.size(); i++) {
         if (i == currentVideoIdx) {
             ofSetColor(ofColor::red);
@@ -47,9 +52,12 @@ void VideoLibrary::draw() {
         auto const file_info = "file " + ofToString(i + 1) + ": " + dir.getName(i);
         ofDrawBitmapString(file_info, 50, i * 20 + 50);
     }
+     */
 }
 
 void VideoLibrary::key_pressed(int key) {
+    
+    /*
     if (dir.size() > 0) {
         switch (key) {
             case OF_KEY_UP:
@@ -67,4 +75,5 @@ void VideoLibrary::key_pressed(int key) {
         
         currentVideoIdx %= dir.size();
     }
+     */
 }

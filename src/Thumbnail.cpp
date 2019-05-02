@@ -1,13 +1,20 @@
 #include "Thumbnail.h"
 
-Thumbnail::Thumbnail(float w, float h, ofImage img, string name, ofColor txtColor)
-: width(w), height(h + NAME_HEIGHT), image(img), videoName(name), textColor(txtColor)
-{}
+Thumbnail::Thumbnail(float x, float y, float w, float h, ofImage img, string name, ofColor txtColor)
+: xPos(x), yPos(y), width(w), height(h), image(img), videoName(name), textColor(txtColor), selected(false){
+    ofRegisterMouseEvents(this);
+}
 
-void Thumbnail::draw(float x, float y) {
+void Thumbnail::draw() {
+    if(selected) {
+        // Draw red border around Thumbnail
+        ofSetColor(ofColor::red);
+        ofDrawRectangle(xPos - BORDER_WIDTH, yPos - BORDER_WIDTH, width + BORDER_WIDTH, height + BORDER_WIDTH);
+    }
+    
     // Black background for possible letterboxing
     ofSetColor(ofColor::black);
-    ofDrawRectangle(x, y, width, height - NAME_HEIGHT);
+    ofDrawRectangle(xPos, yPos, width, height - NAME_HEIGHT);
     
     float imgW = image.getWidth();
     float imgH = image.getHeight();
@@ -25,8 +32,30 @@ void Thumbnail::draw(float x, float y) {
     }
     
     ofSetColor(ofColor::white);
-    image.draw(x, y, fixedW, fixedH);
+    image.draw(xPos, yPos, fixedW, fixedH);
     
     ofSetColor(textColor);
-    ofDrawBitmapString(videoName, x, y + height + NAME_HEIGHT);
+    ofDrawBitmapString(videoName, xPos, yPos + height);
+}
+
+void Thumbnail::mouseMoved(ofMouseEventArgs & args){}
+void Thumbnail::mouseDragged(ofMouseEventArgs & args){}
+void Thumbnail::mousePressed(ofMouseEventArgs & args){}
+void Thumbnail::mouseReleased(ofMouseEventArgs & args){
+    if(inside(args.x, args.y)) {
+        // Toggle selected status
+        selected = !selected;
+        
+        ofVec2f mousePos = ofVec2f(args.x, args.y);
+        ofNotifyEvent(clickedInside, mousePos, this);
+    }
+    
+}
+
+void Thumbnail::mouseScrolled(ofMouseEventArgs &args){}
+void Thumbnail::mouseEntered(ofMouseEventArgs &args){}
+void Thumbnail::mouseExited(ofMouseEventArgs &args){}
+
+bool Thumbnail::inside(float x, float y){
+    return (xPos <= x && x <= xPos + width) && (yPos <= y && y <= yPos + height);
 }
