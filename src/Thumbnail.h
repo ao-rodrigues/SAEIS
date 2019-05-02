@@ -9,8 +9,10 @@
 
 class Thumbnail {
     float xPos, yPos;
+    float fixedXPos, fixedYPos;
     
     float width, height;
+    float fixedW, fixedH;
     
     ofImage image;
     string videoName;

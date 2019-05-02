@@ -34,23 +34,22 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
         thumbnails.push_back(v);
     }
     
-    ofVideoPlayer tmp;
-    
     for (string p : videoPaths) {
+        ofVideoPlayer tmp;
         tmp.load(p);
-        tmp.play();
-        tmp.setPosition(0.1);
+        //tmp.play();
+        //tmp.update();
+        tmp.update();
+        tmp.setFrame(0);
         
         ofImage img;
         unsigned char * pixels = tmp.getPixels().getData();
-        img.setFromPixels(pixels, (int)tmp.getWidth(), (int)tmp.getHeight(), OF_IMAGE_COLOR);
+        img.setFromPixels(pixels, tmp.getWidth(), tmp.getHeight(), OF_IMAGE_COLOR);
         
         Thumbnail th (thumbX, thumbY, videoW, videoH, img, p, ofColor::black);
         
         // TODO
         //ofAddListener(t.clickedInside, &AppController, &AppController::handleThumbnailClick);
-        
-        //thumbnails[currPageIdx].push_back(th);
         
         thumbnails[currPageIdx].push_back(th);
 
@@ -67,7 +66,7 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
             
             // Check if we reached row limit and need to add a new page
             if(nextThumbY > videoAreaHeight) {
-                TextToggle tt (xPos + currPageIdx * INDIVIDUAL_PAGE_NUMS_WIDTH, yPos + height, INDIVIDUAL_PAGE_NUMS_WIDTH, PAGE_NUMS_HEIGHT, to_string(currPageIdx + 1));
+                TextToggle tt (xPos + currPageIdx * INDIVIDUAL_PAGE_NUMS_WIDTH, yPos + thumbY, INDIVIDUAL_PAGE_NUMS_WIDTH, PAGE_NUMS_HEIGHT, to_string(currPageIdx + 1), false);
                 ofAddListener(tt.textClicked, this, &VideoBrowser::onPageNumClick);
                 
                 pageNumbers.push_back(tt);
@@ -79,6 +78,9 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
             }
         }
     }
+    
+    // Starts displaying first page
+    pageNumbers[0].toggle();
     
 }
 

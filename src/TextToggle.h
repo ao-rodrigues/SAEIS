@@ -13,7 +13,7 @@ class TextToggle {
     
 public:
     ofEvent<string> textClicked;
-    TextToggle(float x, float y, float w, float h, string txt);
+    TextToggle(float x, float y, float w, float h, string txt, bool startToggled);
     void draw();
     
     void mouseMoved(ofMouseEventArgs & args);
@@ -25,4 +25,6 @@ public:
     void mouseExited(ofMouseEventArgs & args);
     
     bool inside(float x, float y);
+    
+    void toggle();
 };

@@ -1,8 +1,30 @@
 #include "Thumbnail.h"
 
 Thumbnail::Thumbnail(float x, float y, float w, float h, ofImage img, string name, ofColor txtColor)
-: xPos(x), yPos(y), width(w), height(h), image(img), videoName(name), textColor(txtColor), selected(false){
+: xPos(x), yPos(y), width(w), height(h - NAME_HEIGHT), image(img), videoName(name), textColor(txtColor), selected(false){
     ofRegisterMouseEvents(this);
+    
+    float imgW = image.getWidth();
+    float imgH = image.getHeight();
+    
+    float aspectRatio = imgW / imgH;
+    
+    if(imgW > imgH) {
+        // Letterboxing
+        fixedW = width;
+        fixedH = width / aspectRatio;
+        
+        fixedXPos = xPos;
+        fixedYPos = yPos + ((height - fixedH) / 2.0);
+        
+    } else {
+        // Pillarboxing
+        fixedW = height * aspectRatio;
+        fixedH = height;
+        
+        fixedXPos = xPos + ((width - fixedW) / 2.0);
+        fixedYPos = yPos;
+    }
 }
 
 void Thumbnail::draw() {
@@ -12,30 +34,16 @@ void Thumbnail::draw() {
         ofDrawRectangle(xPos - BORDER_WIDTH, yPos - BORDER_WIDTH, width + BORDER_WIDTH, height + BORDER_WIDTH);
     }
     
-    // Black background for possible letterboxing
+    // Black background for possible letterboxing/pillarboxing
     ofSetColor(ofColor::black);
-    ofDrawRectangle(xPos, yPos, width, height - NAME_HEIGHT);
-    
-    float imgW = image.getWidth();
-    float imgH = image.getHeight();
-    
-    float aspectRatio = imgW / imgH;
-    
-    float fixedW, fixedH;
-    
-    if(imgW > width) {
-        fixedW = width;
-        fixedH = width / aspectRatio;
-    } else {
-        fixedW = height * aspectRatio;
-        fixedH = height;
-    }
+    ofDrawRectangle(xPos, yPos, width, height);
     
     ofSetColor(ofColor::white);
-    image.draw(xPos, yPos, fixedW, fixedH);
+    image.draw(fixedXPos, fixedYPos, fixedW, fixedH);
+    //ofDrawRectangle(fixedXPos, fixedYPos, fixedW, fixedH);
     
     ofSetColor(textColor);
-    ofDrawBitmapString(videoName, xPos, yPos + height);
+    ofDrawBitmapString(videoName, xPos, yPos + height + NAME_HEIGHT);
 }
 
 void Thumbnail::mouseMoved(ofMouseEventArgs & args){}
