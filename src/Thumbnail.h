@@ -7,25 +7,26 @@
 #define NAME_HEIGHT 10
 #define BORDER_WIDTH 5
 
-class Thumbnail {
+class Thumbnail{
     float xPos, yPos;
     float fixedXPos, fixedYPos;
     
     float width, height;
     float fixedW, fixedH;
     
-    ofImage image;
-    string videoName;
+    ofVideoPlayer videoPlayer;
+    string videoPath;
     
     ofColor textColor;
     
     bool selected;
     
 public:
-    ofEvent<ofVec2f> clickedInside;
+    ofEvent<ofVideoPlayer> videoClicked;
     
-    Thumbnail(float x, float y, float w, float h, ofImage img, string name, ofColor txtColor);
+    Thumbnail(float x, float y, float w, float h, string vidPath, ofColor txtColor);
     void draw();
+    void update();
     
     void mouseMoved(ofMouseEventArgs & args);
     void mouseDragged(ofMouseEventArgs & args);
@@ -36,4 +37,5 @@ public:
     void mouseExited(ofMouseEventArgs & args);
     
     bool inside(float x, float y);
+    
 };

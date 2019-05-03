@@ -4,7 +4,7 @@
 
 #include "ofMain.h"
 
-class TextToggle {
+class TextToggle{
     float xPos, yPos;
     float width, height;
     

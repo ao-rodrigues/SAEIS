@@ -31,6 +31,7 @@ VideoLibrary::VideoLibrary() {
 }
 
 void VideoLibrary::update() {
+    videoBrowser->update();
     videoPlayer->update();
 }
 

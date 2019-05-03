@@ -35,21 +35,8 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
     }
     
     for (string p : videoPaths) {
-        ofVideoPlayer tmp;
-        tmp.load(p);
-        //tmp.play();
-        //tmp.update();
-        tmp.update();
-        tmp.setFrame(0);
-        
-        ofImage img;
-        unsigned char * pixels = tmp.getPixels().getData();
-        img.setFromPixels(pixels, tmp.getWidth(), tmp.getHeight(), OF_IMAGE_COLOR);
-        
-        Thumbnail th (thumbX, thumbY, videoW, videoH, img, p, ofColor::black);
-        
-        // TODO
-        //ofAddListener(t.clickedInside, &AppController, &AppController::handleThumbnailClick);
+        Thumbnail th (thumbX, thumbY, videoW, videoH, p, ofColor::black);
+        ofAddListener(th.videoClicked, this, &VideoBrowser::onVideoClicked);
         
         thumbnails[currPageIdx].push_back(th);
 
@@ -84,14 +71,24 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
     
 }
 
+void VideoBrowser::update() {
+    for(Thumbnail t : thumbnails[currentPage - 1]) {
+        t.update();
+    }
+}
+
 void VideoBrowser::draw(){
-    for (Thumbnail t : thumbnails[currentPage - 1]){
-        t.draw();
+    for (Thumbnail th : thumbnails[currentPage - 1]){
+        th.draw();
     }
     
-    for (TextToggle t : pageNumbers) {
-        t.draw();
+    for (TextToggle tt : pageNumbers) {
+        tt.draw();
     }
+}
+
+void VideoBrowser::onVideoClicked(ofVideoPlayer & player) {
+    //nowPlaying = make_unique<ofVideoPlayer>(player);
 }
 
 void VideoBrowser::onPageNumClick(string & num) {

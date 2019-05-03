@@ -10,13 +10,11 @@
 #define INDIVIDUAL_PAGE_NUMS_WIDTH 5
 
 using namespace std;
-class VideoBrowser {
-    float xPos;
-    float yPos;
-    float width;
-    float height;
-    float videoW;
-    float videoH;
+class VideoBrowser{
+    float xPos, yPos;
+    float width, height;
+    float videoW, videoH;
+
     
     int maxElementsPerRow;
     int maxElementsPerCol;
@@ -24,12 +22,17 @@ class VideoBrowser {
     vector<vector<Thumbnail> > thumbnails;
     vector<TextToggle> pageNumbers;
     
-    std::size_t currentPage;
+    size_t currentPage;
     
-    ofVec2f clickedPoint;
+    //unique_ptr<ofVideoPlayer> nowPlaying;
+    
+    //ofVec2f clickedPoint;
     
 public:
     VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths);
     void draw();
     void onPageNumClick(string & txt);
+    void onVideoClicked(ofVideoPlayer & player);
+    
+    void update();
 };

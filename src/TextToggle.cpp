@@ -19,7 +19,7 @@ void TextToggle::mouseDragged(ofMouseEventArgs &args){}
 void TextToggle::mousePressed(ofMouseEventArgs & args){}
 void TextToggle::mouseReleased(ofMouseEventArgs & args) {
     if(inside(args.x, args.y)) {
-        TextToggle::toggle();
+        toggle();
         ofNotifyEvent(textClicked, text, this);
     }
 }

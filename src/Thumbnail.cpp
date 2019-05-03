@@ -1,11 +1,14 @@
 #include "Thumbnail.h"
 
-Thumbnail::Thumbnail(float x, float y, float w, float h, ofImage img, string name, ofColor txtColor)
-: xPos(x), yPos(y), width(w), height(h - NAME_HEIGHT), image(img), videoName(name), textColor(txtColor), selected(false){
+Thumbnail::Thumbnail(float x, float y, float w, float h, string vidPath, ofColor txtColor)
+: xPos(x), yPos(y), width(w), height(h - NAME_HEIGHT), videoPath(vidPath), textColor(txtColor), selected(false){
     ofRegisterMouseEvents(this);
     
-    float imgW = image.getWidth();
-    float imgH = image.getHeight();
+    videoPlayer.load(videoPath);
+    videoPlayer.setLoopState(OF_LOOP_NORMAL);
+    
+    float imgW = videoPlayer.getWidth();
+    float imgH = videoPlayer.getHeight();
     
     float aspectRatio = imgW / imgH;
     
@@ -27,6 +30,10 @@ Thumbnail::Thumbnail(float x, float y, float w, float h, ofImage img, string nam
     }
 }
 
+void Thumbnail::update() {
+    videoPlayer.update();
+}
+
 void Thumbnail::draw() {
     if(selected) {
         // Draw red border around Thumbnail
@@ -39,11 +46,11 @@ void Thumbnail::draw() {
     ofDrawRectangle(xPos, yPos, width, height);
     
     ofSetColor(ofColor::white);
-    image.draw(fixedXPos, fixedYPos, fixedW, fixedH);
+    videoPlayer.draw(fixedXPos, fixedYPos, fixedW, fixedH);
     //ofDrawRectangle(fixedXPos, fixedYPos, fixedW, fixedH);
     
     ofSetColor(textColor);
-    ofDrawBitmapString(videoName, xPos, yPos + height + NAME_HEIGHT);
+    ofDrawBitmapString(videoPath, xPos, yPos + height + NAME_HEIGHT);
 }
 
 void Thumbnail::mouseMoved(ofMouseEventArgs & args){}
@@ -54,8 +61,14 @@ void Thumbnail::mouseReleased(ofMouseEventArgs & args){
         // Toggle selected status
         selected = !selected;
         
-        ofVec2f mousePos = ofVec2f(args.x, args.y);
-        ofNotifyEvent(clickedInside, mousePos, this);
+        if(selected) {
+            videoPlayer.play();
+        }
+        
+        //ofVec2f mousePos = ofVec2f(args.x, args.y);
+        
+        //ofVideoPlayer * playerPtr = &videoPlayer;
+        //ofNotifyEvent(videoClicked, videoPlayer, this);
     }
     
 }
