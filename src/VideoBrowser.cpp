@@ -5,7 +5,7 @@ using namespace std;
 
 // This implementation assumes that there's space for at least one element per page
 VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths)
-: xPos(x), yPos(y), width(w), height(h), videoW(elementW - 2 * SPACING_X), videoH(elementH - 2 * SPACING_Y), currentPage(1) {
+: xPos(x), yPos(y), width(w), height(h), videoW(elementW - 2 * SPACING_X), videoH(elementH - 2 * SPACING_Y) {
     
     if(videoW > width || videoH > height) {
         // Random exception number
@@ -28,17 +28,18 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
     int currPageIdx = 0;
     
     int numPages = ceil((float)videoPaths.size() / (float)(maxElementsPerRow * maxElementsPerCol));
+    thumbnails.reserve(numPages);
     
     for (int i = 0; i < numPages; i++) {
-        vector<Thumbnail> v;
-        thumbnails.push_back(v);
+        vector<unique_ptr<Thumbnail> > v;
+        v.reserve(maxElementsPerRow * maxElementsPerCol);
+        
+        thumbnails.push_back(move(v));
     }
     
     for (string p : videoPaths) {
-        Thumbnail th (thumbX, thumbY, videoW, videoH, p, ofColor::black);
-        ofAddListener(th.videoClicked, this, &VideoBrowser::onVideoClicked);
-        
-        thumbnails[currPageIdx].push_back(th);
+        unique_ptr<Thumbnail> thPtr = make_unique<Thumbnail>(thumbX, thumbY, videoW, videoH, p, ofColor::black);
+        thumbnails[currPageIdx].push_back(move(thPtr));
 
         thumbX = nextThumbX;
         nextThumbX += elementW;
@@ -53,10 +54,15 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
             
             // Check if we reached row limit and need to add a new page
             if(nextThumbY > videoAreaHeight) {
-                TextToggle tt (xPos + currPageIdx * INDIVIDUAL_PAGE_NUMS_WIDTH, yPos + thumbY, INDIVIDUAL_PAGE_NUMS_WIDTH, PAGE_NUMS_HEIGHT, to_string(currPageIdx + 1), false);
-                ofAddListener(tt.textClicked, this, &VideoBrowser::onPageNumClick);
+                unique_ptr<TextToggle> ttPtr = make_unique<TextToggle>(xPos + currPageIdx * INDIVIDUAL_PAGE_NUMS_WIDTH,
+                                                                       yPos + thumbY,
+                                                                       INDIVIDUAL_PAGE_NUMS_WIDTH,
+                                                                       PAGE_NUMS_HEIGHT,
+                                                                       to_string(currPageIdx + 1),
+                                                                       false);
                 
-                pageNumbers.push_back(tt);
+                pageNumbers.push_back(move(ttPtr));
+                ofAddListener(pageNumbers.back()->textClicked, this, &VideoBrowser::onPageNumClick);
                 
                 currPageIdx++;
                 
@@ -67,31 +73,28 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
     }
     
     // Starts displaying first page
-    pageNumbers[0].toggle();
-    
+    pageNumbers[0]->toggle();
+    currentPage = 1;
 }
 
 void VideoBrowser::update() {
-    for(Thumbnail t : thumbnails[currentPage - 1]) {
-        t.update();
+    for(int i = 0; i < thumbnails.size(); i++) {
+        thumbnails[currentPage - 1][i]->update();
     }
 }
 
 void VideoBrowser::draw(){
-    for (Thumbnail th : thumbnails[currentPage - 1]){
-        th.draw();
+    for (int i = 0; i < thumbnails[currentPage - 1].size(); i++){
+        thumbnails[currentPage - 1][i]->draw();
     }
     
-    for (TextToggle tt : pageNumbers) {
-        tt.draw();
+    for (int i = 0; i < pageNumbers.size(); i++) {
+        pageNumbers[i]->draw();
     }
-}
-
-void VideoBrowser::onVideoClicked(ofVideoPlayer & player) {
-    //nowPlaying = make_unique<ofVideoPlayer>(player);
 }
 
 void VideoBrowser::onPageNumClick(string & num) {
-    currentPage = std::stoi(num);
+    cout << "Page num clicked!";
+    currentPage = stoi(num);
 }
 

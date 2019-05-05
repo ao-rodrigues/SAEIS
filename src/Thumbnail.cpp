@@ -28,6 +28,9 @@ Thumbnail::Thumbnail(float x, float y, float w, float h, string vidPath, ofColor
         fixedXPos = xPos + ((width - fixedW) / 2.0);
         fixedYPos = yPos;
     }
+    
+    clickListener = ofEvents().mouseReleased.newListener(this, &Thumbnail::onMouseReleased);
+    
 }
 
 void Thumbnail::update() {
@@ -38,7 +41,7 @@ void Thumbnail::draw() {
     if(selected) {
         // Draw red border around Thumbnail
         ofSetColor(ofColor::red);
-        ofDrawRectangle(xPos - BORDER_WIDTH, yPos - BORDER_WIDTH, width + BORDER_WIDTH, height + BORDER_WIDTH);
+        ofDrawRectangle(xPos - BORDER_WIDTH, yPos - BORDER_WIDTH, width + 2 * BORDER_WIDTH, height + 2 * BORDER_WIDTH);
     }
     
     // Black background for possible letterboxing/pillarboxing
@@ -53,29 +56,32 @@ void Thumbnail::draw() {
     ofDrawBitmapString(videoPath, xPos, yPos + height + NAME_HEIGHT);
 }
 
+
 void Thumbnail::mouseMoved(ofMouseEventArgs & args){}
 void Thumbnail::mouseDragged(ofMouseEventArgs & args){}
 void Thumbnail::mousePressed(ofMouseEventArgs & args){}
-void Thumbnail::mouseReleased(ofMouseEventArgs & args){
+void Thumbnail::mouseReleased(ofMouseEventArgs & args){}
+void Thumbnail::mouseScrolled(ofMouseEventArgs &args){}
+void Thumbnail::mouseEntered(ofMouseEventArgs &args){}
+void Thumbnail::mouseExited(ofMouseEventArgs &args){}
+
+void Thumbnail::onMouseReleased(ofMouseEventArgs &args) {
     if(inside(args.x, args.y)) {
         // Toggle selected status
         selected = !selected;
         
+        
         if(selected) {
             videoPlayer.play();
+        } else {
+            videoPlayer.stop();
         }
-        
-        //ofVec2f mousePos = ofVec2f(args.x, args.y);
-        
-        //ofVideoPlayer * playerPtr = &videoPlayer;
-        //ofNotifyEvent(videoClicked, videoPlayer, this);
+    } else {
+        selected = false;
+        videoPlayer.stop();
     }
-    
 }
-
-void Thumbnail::mouseScrolled(ofMouseEventArgs &args){}
-void Thumbnail::mouseEntered(ofMouseEventArgs &args){}
-void Thumbnail::mouseExited(ofMouseEventArgs &args){}
+    
 
 bool Thumbnail::inside(float x, float y){
     return (xPos <= x && x <= xPos + width) && (yPos <= y && y <= yPos + height);

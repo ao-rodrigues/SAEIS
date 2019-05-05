@@ -5,7 +5,7 @@
 #include "ofMain.h"
 
 #define NAME_HEIGHT 10
-#define BORDER_WIDTH 5
+#define BORDER_WIDTH 2
 
 class Thumbnail{
     float xPos, yPos;
@@ -21,8 +21,10 @@ class Thumbnail{
     
     bool selected;
     
+    ofEventListener clickListener;
+    
 public:
-    ofEvent<ofVideoPlayer> videoClicked;
+    //ofEvent<ofVideoPlayer> videoClicked;
     
     Thumbnail(float x, float y, float w, float h, string vidPath, ofColor txtColor);
     void draw();
@@ -36,6 +38,8 @@ public:
     void mouseEntered(ofMouseEventArgs & args);
     void mouseExited(ofMouseEventArgs & args);
     
+    
+    void onMouseReleased(ofMouseEventArgs & args);
     bool inside(float x, float y);
     
 };

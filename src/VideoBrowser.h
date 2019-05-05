@@ -19,10 +19,10 @@ class VideoBrowser{
     int maxElementsPerRow;
     int maxElementsPerCol;
     
-    vector<vector<Thumbnail> > thumbnails;
-    vector<TextToggle> pageNumbers;
+    vector<vector<unique_ptr<Thumbnail> > > thumbnails;
+    vector<unique_ptr<TextToggle> > pageNumbers;
     
-    size_t currentPage;
+    int currentPage;
     
     //unique_ptr<ofVideoPlayer> nowPlaying;
     
@@ -32,7 +32,7 @@ public:
     VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths);
     void draw();
     void onPageNumClick(string & txt);
-    void onVideoClicked(ofVideoPlayer & player);
+    //void onVideoClicked(ofVideoPlayer & player);
     
     void update();
 };

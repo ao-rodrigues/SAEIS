@@ -17,14 +17,14 @@ VideoLibrary::VideoLibrary() {
             videoPaths.push_back(dir.getPath(i));
         }
         
-        videoBrowser = std::make_unique<VideoBrowser>(VideoBrowser(50, 50, 200, 800, 200, 200, videoPaths));
+        videoBrowser = std::make_unique<VideoBrowser>(50, 50, 200, 800, 200, 200, videoPaths);
         
         // Default player dimensions for now
-        videoPlayer = std::make_unique<Player>(Player(videoPaths[0],
+        videoPlayer = std::make_unique<Player>(videoPaths[0],
                                                ofApp::WINDOW_WIDTH / 2.0,
                                                PADDING,
                                                (ofApp::WINDOW_WIDTH / 2.0) - PADDING,
-                                               ofApp::WINDOW_HEIGHT - PADDING));
+                                               ofApp::WINDOW_HEIGHT - PADDING);
     } else {
         exit(-1);
     }
