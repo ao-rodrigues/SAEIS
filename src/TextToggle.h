@@ -26,5 +26,7 @@ public:
     
     bool inside(float x, float y);
     
-    void toggle();
+    void setToggled(bool isToggled);
+    
+    string getText();
 };

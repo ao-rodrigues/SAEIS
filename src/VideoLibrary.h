@@ -15,6 +15,8 @@ class VideoLibrary {
     std::vector<string> videoPaths;
     std::unique_ptr<Player> videoPlayer;
     
+    std::shared_ptr<ofVideoPlayer> player;
+    
     std::unique_ptr<VideoBrowser> videoBrowser;
     
 public:
@@ -22,5 +24,6 @@ public:
     void update();
     void draw();
     void key_pressed(int key);
+    //string extractVideoName(string path);
 };
 

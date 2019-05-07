@@ -6,8 +6,8 @@
 
 #define SPACING_X 10
 #define SPACING_Y 10
-#define PAGE_NUMS_HEIGHT 10
-#define INDIVIDUAL_PAGE_NUMS_WIDTH 5
+#define PAGE_NUMS_HEIGHT 15
+#define INDIVIDUAL_PAGE_NUMS_WIDTH 30
 
 using namespace std;
 class VideoBrowser{
@@ -15,24 +15,24 @@ class VideoBrowser{
     float width, height;
     float videoW, videoH;
 
-    
     int maxElementsPerRow;
-    int maxElementsPerCol;
+    int maxRows;
+    int currentPage;
     
     vector<vector<unique_ptr<Thumbnail> > > thumbnails;
     vector<unique_ptr<TextToggle> > pageNumbers;
     
-    int currentPage;
+    
     
     //unique_ptr<ofVideoPlayer> nowPlaying;
     
     //ofVec2f clickedPoint;
     
 public:
-    VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths);
+    VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths, shared_ptr<ofVideoPlayer> player);
     void draw();
     void onPageNumClick(string & txt);
-    //void onVideoClicked(ofVideoPlayer & player);
+    void onVideoClicked(const int & thumbnailId);
     
     void update();
 };

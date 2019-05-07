@@ -7,17 +7,26 @@ VideoLibrary::VideoLibrary() {
     
     // List directory paths & remove all that do not conform to the extension
     dir.listDir(dir_path);
-    dir.allowExt(video_ext);
+    dir.allowExt("mov");
+    dir.allowExt("mp4");
     dir.sort();
+    
+    //std::vector<string> videoNames;
     
     
     if (dir.size() > 0) {
         videoPaths.reserve(dir.size());
+        //videoNames.reserve(dir.size());
         for (size_t i = 0; i < dir.size(); i++) {
-            videoPaths.push_back(dir.getPath(i));
+            string path = dir.getPath(i);
+            
+            //videoNames.push_back(path);
+            videoPaths.push_back(path);
         }
         
-        videoBrowser = std::make_unique<VideoBrowser>(50, 50, 200, 800, 200, 200, videoPaths);
+        player = std::make_shared<ofVideoPlayer>();
+        
+        videoBrowser = std::make_unique<VideoBrowser>(50, 50, 500, 500, 200, 200, videoPaths, player);
         
         // Default player dimensions for now
         videoPlayer = std::make_unique<Player>(videoPaths[0],
@@ -31,12 +40,25 @@ VideoLibrary::VideoLibrary() {
 }
 
 void VideoLibrary::update() {
-    videoBrowser->update();
-    videoPlayer->update();
+    //videoBrowser->update();
+    //videoPlayer->update();
+    
+    if(player->isLoaded()) {
+        player->update();
+    }
 }
 
 void VideoLibrary::draw() {
     videoBrowser->draw();
+    
+    if(player->isLoaded()) {
+        ofSetColor(ofColor::white);
+        player->draw(50, 600, 200, 200);
+    } else {
+        ofSetColor(ofColor::gray);
+        ofDrawRectangle(50, 600, 200, 200);
+    }
+    
     
     //videoPlayer->draw();
     
@@ -55,6 +77,16 @@ void VideoLibrary::draw() {
     }
      */
 }
+
+/*
+string VideoLibrary::extractVideoName(string path) {
+    string baseFilename = path.substr(path.find_last_of("/\\") + 1);
+    std::size_t extStart = baseFilename.find_last_of(".");
+    
+    return baseFilename.substr(0, extStart);
+    
+}
+ */
 
 void VideoLibrary::key_pressed(int key) {
     

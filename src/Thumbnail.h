@@ -8,25 +8,30 @@
 #define BORDER_WIDTH 2
 
 class Thumbnail{
+    static const string THUMBNAILS_PATH;
+    
     float xPos, yPos;
     float fixedXPos, fixedYPos;
     
     float width, height;
     float fixedW, fixedH;
     
-    ofVideoPlayer videoPlayer;
-    string videoPath;
+    bool selected, enabled;
+    
+    shared_ptr<ofVideoPlayer> player;
+    
+    //ofVideoPlayer videoPlayer;
+    ofImage thumbnail;
+    string videoPath, videoName;
     
     ofColor textColor;
-    
-    bool selected;
     
     ofEventListener clickListener;
     
 public:
-    //ofEvent<ofVideoPlayer> videoClicked;
+    //ofEvent<const int> videoClicked;
     
-    Thumbnail(float x, float y, float w, float h, string vidPath, ofColor txtColor);
+    Thumbnail(float x, float y, float w, float h, string vidPath, shared_ptr<ofVideoPlayer> plyr);
     void draw();
     void update();
     
@@ -41,5 +46,8 @@ public:
     
     void onMouseReleased(ofMouseEventArgs & args);
     bool inside(float x, float y);
+    void setSelected(bool isSelected);
+    void setEnabled(bool isEnabled);
+    string extractVideoName(string path);
     
 };
