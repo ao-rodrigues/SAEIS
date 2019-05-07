@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Player.hpp"
+#include "Player.h"
 #include "VideoBrowser.h"
 
 class VideoLibrary {
@@ -13,9 +13,7 @@ class VideoLibrary {
     
     ofDirectory dir;
     std::vector<string> videoPaths;
-    std::unique_ptr<Player> videoPlayer;
-    
-    std::shared_ptr<ofVideoPlayer> player;
+    std::shared_ptr<Player> player;
     
     std::unique_ptr<VideoBrowser> videoBrowser;
     
@@ -24,6 +22,5 @@ public:
     void update();
     void draw();
     void key_pressed(int key);
-    //string extractVideoName(string path);
 };
 

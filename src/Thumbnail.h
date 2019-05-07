@@ -3,6 +3,7 @@
 #endif /* Thumbnail_h */
 
 #include "ofMain.h"
+#include "Player.h"
 
 #define NAME_HEIGHT 10
 #define BORDER_WIDTH 2
@@ -18,7 +19,7 @@ class Thumbnail{
     
     bool selected, enabled;
     
-    shared_ptr<ofVideoPlayer> player;
+    shared_ptr<Player> player;
     
     //ofVideoPlayer videoPlayer;
     ofImage thumbnail;
@@ -31,7 +32,7 @@ class Thumbnail{
 public:
     //ofEvent<const int> videoClicked;
     
-    Thumbnail(float x, float y, float w, float h, string vidPath, shared_ptr<ofVideoPlayer> plyr);
+    Thumbnail(float x, float y, float w, float h, string vidPath, shared_ptr<Player> plyr);
     void draw();
     void update();
     

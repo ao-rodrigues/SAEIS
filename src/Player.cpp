@@ -1,49 +1,45 @@
-#include "Player.hpp"
+#include "Player.h"
 
-Player::Player(string path, float xPos, float yPos, float width, float height) {
-    this->path = path;
-    this->player = ofVideoPlayer();
-    this->playerWidth = width;
-    this->playerHeight = height;
-    this->playerXPosition = xPos;
-    this->playerYPosition = yPos;
-    
+Player::Player()
+: xPos(0), yPos(0), videoXPos(0), videoYPos(0), width(1024), height(768), videoWidth(1024), videoHeight(1024){}
+
+Player::Player(float x, float y, float w, float h)
+: xPos(x), yPos(y), width(w), height(h){
     player.setLoopState(OF_LOOP_NORMAL);
-    
-    loadVideo(this->path);
 }
 
-void Player::loadVideo(const string path) {
+void Player::load(const string path) {
     if (player.isLoaded()) {
         player.closeMovie();
     }
     
     player.load(path);
     
-    videoWidth = player.getWidth();
-    videoHeight = player.getHeight();
+    float vidW = player.getWidth();
+    float vidH = player.getHeight();
     
-    float proportion;
+    float aspectRatio = vidW / vidH;
     
-    
-    if (playerHeight > playerWidth) {
-        if (videoWidth >= videoHeight) {
-            proportion = playerWidth / videoWidth;
-        } else {
-            proportion = playerHeight / videoHeight;
-        }
+    if (vidW > vidH) {
+        // Letterboxing
+        videoWidth = width;
+        videoHeight = width / aspectRatio;
+        
+        videoXPos = xPos;
+        videoYPos = yPos + ((height - videoHeight) / 2.0);
     } else {
-        if (videoWidth <= videoHeight) {
-            proportion = playerHeight / videoHeight;
-        } else {
-            proportion = playerWidth / videoWidth;
-        }
+        // Pillarboxing
+        videoWidth = height * aspectRatio;
+        videoHeight = height;
+        
+        videoXPos = xPos + ((width - videoWidth) / 2.0);
+        videoYPos = yPos;
     }
-    
-    videoWidth *= proportion;
-    videoHeight *= proportion;
-    
-    // player.play();
+
+}
+
+void Player::play() {
+    player.play();
 }
 
 void Player::keyPress(int key) {
@@ -68,13 +64,37 @@ void Player::keyPress(int key) {
 }
 
 void Player::draw() {
-    ofSetColor(ofColor::white);
-    player.draw(playerXPosition,
-                playerYPosition,
-                videoWidth,
-                videoHeight);
+    if (player.isLoaded()){
+        ofSetColor(ofColor::black);
+        ofDrawRectangle(xPos, yPos, width, height);
+        
+        ofSetColor(ofColor::white);
+        player.draw(videoXPos,
+                    videoYPos,
+                    videoWidth,
+                    videoHeight);
+    } else {
+        ofSetColor(ofColor::gray);
+        ofDrawRectangle(xPos, yPos, width, height);
+    }
 }
 
+/*
+void Player::draw(float x, float y) {
+    ofSetColor(ofColor::black);
+    ofDrawRectangle(x, y, width, height);
+    
+    ofSetColor(ofColor::white);
+    player.draw(x, y, videoWidth, videoHeight);
+}
+ 
+ */
+
+
+
 void Player::update() {
-    player.update();
+    if(player.isLoaded()) {
+        player.update();
+    }
+    
 }

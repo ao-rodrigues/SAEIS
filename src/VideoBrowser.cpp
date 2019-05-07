@@ -4,7 +4,7 @@
 using namespace std;
 
 // This implementation assumes that there's space for at least one element per page
-VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths, shared_ptr<ofVideoPlayer> player)
+VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths, shared_ptr<Player> player)
 : xPos(x), yPos(y), width(w), height(h), videoW(elementW - 2 * SPACING_X), videoH(elementH - 2 * SPACING_Y) {
     
     if(videoW > width || videoH > height) {

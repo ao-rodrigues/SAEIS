@@ -6,7 +6,7 @@ int main()
 {
     ofSetupOpenGL(ofApp::WINDOW_WIDTH,
                   ofApp::WINDOW_HEIGHT,
-                  OF_WINDOW);
+                  OF_FULLSCREEN);
     
     // this kicks off the running of my app
     // can be OF_WINDOW or OF_FULLSCREEN

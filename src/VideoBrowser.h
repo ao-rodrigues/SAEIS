@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "Thumbnail.h"
 #include "TextToggle.h"
+#include "Player.h"
 
 #define SPACING_X 10
 #define SPACING_Y 10
@@ -29,7 +30,7 @@ class VideoBrowser{
     //ofVec2f clickedPoint;
     
 public:
-    VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths, shared_ptr<ofVideoPlayer> player);
+    VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths, shared_ptr<Player> player);
     void draw();
     void onPageNumClick(string & txt);
     void onVideoClicked(const int & thumbnailId);

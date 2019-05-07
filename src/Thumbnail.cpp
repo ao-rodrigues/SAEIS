@@ -2,7 +2,7 @@
 
 const string Thumbnail::THUMBNAILS_PATH = "thumbnails/thumbnail_";
 
-Thumbnail::Thumbnail(float x, float y, float w, float h, string vidPath, shared_ptr<ofVideoPlayer> plyr)
+Thumbnail::Thumbnail(float x, float y, float w, float h, string vidPath, shared_ptr<Player> plyr)
 : xPos(x), yPos(y), width(w), height(h - NAME_HEIGHT), videoPath(vidPath), selected(false), player(plyr){
     ofRegisterMouseEvents(this);
     
@@ -19,6 +19,7 @@ Thumbnail::Thumbnail(float x, float y, float w, float h, string vidPath, shared_
         imgW = thumbnail.getWidth();
         imgH = thumbnail.getHeight();
     
+        
         float aspectRatio = imgW / imgH;
         
         if(imgW > imgH) {
@@ -50,6 +51,7 @@ Thumbnail::Thumbnail(float x, float y, float w, float h, string vidPath, shared_
     }
     
     clickListener = ofEvents().mouseReleased.newListener(this, &Thumbnail::onMouseReleased);
+    
     
 }
 
@@ -90,12 +92,7 @@ void Thumbnail::onMouseReleased(ofMouseEventArgs &args) {
         // Toggle selected status
         selected = true;
         
-        // Stop and close previous video
-        player->stop();
-        player->close();
-        
         player->load(videoPath);
-        player->setLoopState(OF_LOOP_NORMAL);
         player->play();
         
         //ofNotifyEvent(videoClicked, thumbnailId, this);

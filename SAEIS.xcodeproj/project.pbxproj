@@ -33,7 +33,7 @@
 		BAE475BA2277C85B00F9EFAC /* ofApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
 		BAE475BD2277C88C00F9EFAC /* ofApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
 		BAE475BE2277C8C000F9EFAC /* Player.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
-		BAE475BF2277C8C000F9EFAC /* Player.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Player.hpp; sourceTree = "<group>"; };
+		BAE475BF2277C8C000F9EFAC /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VideoLibrary.cpp; sourceTree = "<group>"; };
 		BAE475C32277C90800F9EFAC /* VideoLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoLibrary.h; sourceTree = "<group>"; };
 		BAE475C42279C46D00F9EFAC /* VideoBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoBrowser.h; sourceTree = "<group>"; };
@@ -607,7 +607,7 @@
 				BAE475BA2277C85B00F9EFAC /* ofApp.cpp */,
 				BAE475BD2277C88C00F9EFAC /* ofApp.h */,
 				BAE475BE2277C8C000F9EFAC /* Player.cpp */,
-				BAE475BF2277C8C000F9EFAC /* Player.hpp */,
+				BAE475BF2277C8C000F9EFAC /* Player.h */,
 				BAE475C12277C8EA00F9EFAC /* VideoLibrary.cpp */,
 				BAE475C32277C90800F9EFAC /* VideoLibrary.h */,
 				BAE475C42279C46D00F9EFAC /* VideoBrowser.h */,
