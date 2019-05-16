@@ -24,14 +24,11 @@ class VideoLibrary {
     
     const int NUM_PREVIEW_FRAMES = 10;
     
-    const int frameStep = 2;
+    const int frameStep = 10;
     
     int frameStepCounter;
     
     string statusMsg;
-    
-    const float PADDING = 50.0;
-    
     
     ofDirectory dir;
     vector<string> videoNames;
@@ -53,10 +50,6 @@ class VideoLibrary {
     
     ofVideoPlayer hiddenPlayer;
 
-    
-    ofxCvGrayscaleImage gray;
-    float percent;
-    
 public:
     VideoLibrary();
     void update();

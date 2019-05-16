@@ -15,16 +15,13 @@ class Thumbnail{
     const float PREVIEW_FPS = 1.0;
     
     float xPos, yPos;
-    //float fixedXPos, fixedYPos;
     
     float width, height;
-    //float fixedW, fixedH;
     
     bool selected, enabled, hasPreviewFrames;
     
     shared_ptr<Player> player;
     
-    //ofVideoPlayer videoPlayer;
     ofImage thumbnail;
     string videoPath, videoName;
     
@@ -34,9 +31,7 @@ class Thumbnail{
     
     vector<ofTexture> previewFrames;
     
-public:
-    //ofEvent<const int> videoClicked;
-    
+public:    
     Thumbnail(float x, float y, float w, float h, string vidPath, shared_ptr<Player> plyr);
     void draw();
     void update();

@@ -92,7 +92,7 @@ void VideoLibrary::update() {
         }
         
         hiddenPlayer.update();
-        if(hiddenPlayer.isFrameNew() && (frameStepCounter % 10) == 0){
+        if(hiddenPlayer.isFrameNew() && (frameStepCounter % frameStep) == 0){
             if(learnFirstFrame) {
                 ofxCvColorImage firstFrame;
                 firstFrame.setFromPixels(hiddenPlayer.getPixels());

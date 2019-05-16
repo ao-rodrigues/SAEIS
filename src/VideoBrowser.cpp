@@ -115,13 +115,6 @@ void VideoBrowser::update() {
 }
 
 void VideoBrowser::draw(){
-    /*
-    ofSetColor(ofColor::red);
-    ofDrawRectangle(xPos - 3, yPos - 3, width + 6, height + 6);
-    
-    ofSetColor(ofColor::white);
-    ofDrawRectangle(xPos, yPos, width, height);
-    */
     for (int i = 0; i < thumbnailsByPage[currentPage - 1].size(); i++){
         thumbnailsByPage[currentPage - 1][i]->draw();
     }
@@ -160,19 +153,4 @@ void VideoBrowser::updatePreviewFrames(string vidPath, vector<ofTexture> frames)
     
     found->second->updatePreviewFrames(frames);
 }
-
-/*
-void VideoBrowser::onVideoClicked(const int & thumbnailId) {
-    // This is horrible but it's the best way for now
-    for(int i = 0; i < thumbnails.size(); i++) {
-        for (int j = 0; j < thumbnails[i].size(); j++) {
-            if(thumbnailId != thumbnails[i][j]->getId()) {
-                thumbnails[i][j]->setSelected(false);
-            } else {
-                thumbnails[i][j]->setSelected(true);
-            }
-        }
-    }
-}
- */
 

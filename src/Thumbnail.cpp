@@ -70,7 +70,7 @@ bool Thumbnail::mouseOver() {
 void Thumbnail::draw() {
     if(selected) {
         // Draw red border around Thumbnail
-        ofSetColor(ofColor::red);
+        ofSetColor(ofColor::steelBlue);
         ofDrawRectangle(xPos - BORDER_WIDTH, yPos - BORDER_WIDTH, width + 2 * BORDER_WIDTH, height + 2 * BORDER_WIDTH);
     }
     
@@ -140,7 +140,6 @@ void Thumbnail::onMouseReleased(ofMouseEventArgs &args) {
         player->load(videoPath);
         player->play();
         
-        //ofNotifyEvent(videoClicked, thumbnailId, this);
     } else {
         selected = false;
     }
