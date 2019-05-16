@@ -56,12 +56,12 @@ VideoLibrary::VideoLibrary() {
         videoBrowser = std::make_unique<VideoBrowser>(50, 50, 500, 500, 200, 200, videoPaths, player);
         
         // Grab preview frames of already processed videos
-        for(int i = 0; i < lastProcessedIdx; i++) {
+        for(int i = 0; i <= lastProcessedIdx; i++) {
             string vidName = videoNames[i];
             vector<ofTexture> frames;
-            frames.reserve(NUM_PREVIEW_FRAMES);
+            frames.resize(NUM_PREVIEW_FRAMES);
             
-            for(size_t j = 0; j < NUM_PREVIEW_FRAMES; j++){
+            for(int j = 0; j < NUM_PREVIEW_FRAMES; j++){
                 string framePath = previewFramesPath + vidName + "/" + to_string(j) + ".jpg";
                 ofLoadImage(frames[j], framePath);
             }
@@ -128,7 +128,7 @@ void VideoLibrary::update() {
             sort(topDiffs.begin(), topDiffs.end(), VideoLibrary::originalIdxCompare);
             
             vector<ofTexture> previewFrames;
-            previewFrames.reserve(topDiffs.size());
+            //previewFrames.reserve(topDiffs.size());
             
             for(int i = 0; i < topDiffs.size(); i++) {
                 ofTexture tex = topDiffs[i].tex;
@@ -147,9 +147,16 @@ void VideoLibrary::update() {
             
             videoBrowser->updatePreviewFrames(dir.getPath(lastProcessedIdx + 1), previewFrames);
             
+            // Reset everything
+            framePair.first.clear();
+            framePair.second.clear();
+            
             diffs.clear();
             frameStepCounter = 0;
             hiddenPlayer.closeMovie();
+            
+            learnFirstFrame = true;
+            learnSecFrame = true;
             
             lastProcessedIdx++;
             XML.setValue(lastProcessedTag, lastProcessedIdx);
@@ -188,7 +195,6 @@ string VideoLibrary::extractVideoName(string path) {
 void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) {
     ofxCvGrayscaleImage grayFirst;
     ofxCvGrayscaleImage graySecond;
-    //ofxCvGrayscaleImage grayDiff;
     
     vector<int> histFirst (256, 0);
     vector<int> histSecond (256, 0);

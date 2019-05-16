@@ -32,10 +32,8 @@ class VideoLibrary {
     
     const float PADDING = 50.0;
     
-    //int lastTagNum;
     
     ofDirectory dir;
-    //std::vector<string> videoPaths;
     vector<string> videoNames;
     vector<DiffFrame> diffs;
     
