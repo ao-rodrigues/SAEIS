@@ -20,7 +20,11 @@ class VideoBrowser{
     int maxRows;
     int currentPage;
     
-    vector<vector<unique_ptr<Thumbnail> > > thumbnails;
+    vector<vector<shared_ptr<Thumbnail> > > thumbnailsByPage;
+    
+    // For easy access when updating preview frames
+    unordered_map<string, shared_ptr<Thumbnail> > thumbnailsByPath;
+    
     vector<unique_ptr<TextToggle> > pageNumbers;
     
     
@@ -34,6 +38,8 @@ public:
     void draw();
     void onPageNumClick(string & txt);
     void onVideoClicked(const int & thumbnailId);
+    
+    void updatePreviewFrames(string vidPath, vector<ofTexture> frames);
     
     void update();
 };

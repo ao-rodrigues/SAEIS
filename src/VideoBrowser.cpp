@@ -18,15 +18,17 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
     maxElementsPerRow = (int)floor(width / elementW);
     maxRows = (int)floor(videoAreaHeight / elementH);
     
+    //thumbnailsByPath.reserve(videoPaths.size());
+    
     int numPages = ceil((float)videoPaths.size() / (float)(maxElementsPerRow * maxRows));
-    thumbnails.reserve(numPages);
+    thumbnailsByPage.reserve(numPages);
     pageNumbers.reserve(numPages);
     
     for (int i = 0; i < numPages; i++) {
-        vector<unique_ptr<Thumbnail> > v;
+        vector<shared_ptr<Thumbnail> > v;
         v.reserve(maxElementsPerRow * maxRows);
         
-        thumbnails.push_back(move(v));
+        thumbnailsByPage.push_back(move(v));
     }
     
     int elementsInRow = 0;
@@ -53,9 +55,10 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
     //currPageIdx++;
     
     for (string p : videoPaths) {
-        unique_ptr<Thumbnail> thPtr = make_unique<Thumbnail>(thumbX, thumbY, videoW, videoH, p, player);
-        thumbnails[currPageIdx].push_back(move(thPtr));
-        //ofAddListener(thumbnails[currPageIdx].back()->videoClicked, this, &VideoBrowser::onVideoClicked);
+        shared_ptr<Thumbnail> thPtr = make_shared<Thumbnail>(thumbX, thumbY, videoW, videoH, p, player);
+
+        thumbnailsByPage[currPageIdx].push_back(thPtr);
+        thumbnailsByPath.insert(make_pair(p, thPtr));
         
         elementsInRow++;
         
@@ -99,15 +102,15 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
     pageNumbers[0]->setToggled(true);
     currentPage = 1;
     
-    for(int i = 0; i < thumbnails[currentPage - 1].size(); i++) {
-        thumbnails[currentPage - 1][i]->setEnabled(true);
+    for(int i = 0; i < thumbnailsByPage[currentPage - 1].size(); i++) {
+        thumbnailsByPage[currentPage - 1][i]->setEnabled(true);
     }
         
 }
 
 void VideoBrowser::update() {
-    for(int i = 0; i < thumbnails.size(); i++) {
-        thumbnails[currentPage - 1][i]->update();
+    for(int i = 0; i < thumbnailsByPage.size(); i++) {
+        thumbnailsByPage[currentPage - 1][i]->update();
     }
 }
 
@@ -119,8 +122,8 @@ void VideoBrowser::draw(){
     ofSetColor(ofColor::white);
     ofDrawRectangle(xPos, yPos, width, height);
     */
-    for (int i = 0; i < thumbnails[currentPage - 1].size(); i++){
-        thumbnails[currentPage - 1][i]->draw();
+    for (int i = 0; i < thumbnailsByPage[currentPage - 1].size(); i++){
+        thumbnailsByPage[currentPage - 1][i]->draw();
     }
     
     for (int i = 0; i < pageNumbers.size(); i++) {
@@ -133,8 +136,8 @@ void VideoBrowser::onPageNumClick(string & txt) {
     //Toggle currently selected off
     pageNumbers[currentPage - 1]->setToggled(false);
     
-    for(int i = 0; i < thumbnails[currentPage - 1].size(); i++) {
-        thumbnails[currentPage - 1][i]->setEnabled(false);
+    for(int i = 0; i < thumbnailsByPage[currentPage - 1].size(); i++) {
+        thumbnailsByPage[currentPage - 1][i]->setEnabled(false);
     }
     
     for(int i = 0; i < pageNumbers.size(); i++) {
@@ -146,10 +149,16 @@ void VideoBrowser::onPageNumClick(string & txt) {
         }
     }
     
-    for(int i = 0; i < thumbnails[currentPage - 1].size(); i++) {
-        thumbnails[currentPage - 1][i]->setEnabled(true);
+    for(int i = 0; i < thumbnailsByPage[currentPage - 1].size(); i++) {
+        thumbnailsByPage[currentPage - 1][i]->setEnabled(true);
     }
         
+}
+
+void VideoBrowser::updatePreviewFrames(string vidPath, vector<ofTexture> frames) {
+    unordered_map<string, shared_ptr<Thumbnail>>::const_iterator found = thumbnailsByPath.find(vidPath);
+    
+    found->second->updatePreviewFrames(frames);
 }
 
 /*

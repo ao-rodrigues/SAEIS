@@ -11,13 +11,16 @@
 class Thumbnail{
     static const string THUMBNAILS_PATH;
     
+    // By default, 1 frame per second
+    const float PREVIEW_FPS = 1.0;
+    
     float xPos, yPos;
-    float fixedXPos, fixedYPos;
+    //float fixedXPos, fixedYPos;
     
     float width, height;
-    float fixedW, fixedH;
+    //float fixedW, fixedH;
     
-    bool selected, enabled;
+    bool selected, enabled, hasPreviewFrames;
     
     shared_ptr<Player> player;
     
@@ -29,12 +32,16 @@ class Thumbnail{
     
     ofEventListener clickListener;
     
+    vector<ofTexture> previewFrames;
+    
 public:
     //ofEvent<const int> videoClicked;
     
     Thumbnail(float x, float y, float w, float h, string vidPath, shared_ptr<Player> plyr);
     void draw();
     void update();
+    
+    void updatePreviewFrames(vector<ofTexture> frames);
     
     void mouseMoved(ofMouseEventArgs & args);
     void mouseDragged(ofMouseEventArgs & args);
@@ -46,9 +53,15 @@ public:
     
     
     void onMouseReleased(ofMouseEventArgs & args);
+    
+    bool mouseOver();
+    
     bool inside(float x, float y);
     void setSelected(bool isSelected);
     void setEnabled(bool isEnabled);
     string extractVideoName(string path);
+    
+protected:
+    void calcFixedDimensions(ofTexture frame, float & fixedXPos, float & fixedYPos, float & fixedW, float & fixedH);
     
 };
