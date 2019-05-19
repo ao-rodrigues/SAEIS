@@ -33,6 +33,11 @@ VideoLibrary::VideoLibrary() {
             videosProcessed = false;
         }
         
+        colorProcessed = false;
+        
+        sumAvgLuminances = 0.0f;
+        sumNumFaces = 0;
+        
         learnFirstFrame = true;
         learnSecFrame = true;
         frameStepCounter = 0;
@@ -84,11 +89,18 @@ bool VideoLibrary::originalIdxCompare(const DiffFrame &i, const DiffFrame &j) {
 
 void VideoLibrary::update() {
     if(!videosProcessed){
+        statusMsg = PROCESSING_VIDEOS_MSG;
+        
         if(!hiddenPlayer.isLoaded()){
             hiddenPlayer.load(dir.getPath(lastProcessedIdx + 1));
             hiddenPlayer.play();
             hiddenPlayer.setVolume(0.0);
             hiddenPlayer.setLoopState(OF_LOOP_NONE);
+            
+            XML.pushTag(metadataTag);
+            XML.addTag(videoNames[lastProcessedIdx + 1]);
+            XML.popTag();
+            XML.saveFile(metadataFile);
         }
         
         hiddenPlayer.update();
@@ -96,6 +108,7 @@ void VideoLibrary::update() {
             if(learnFirstFrame) {
                 ofxCvColorImage firstFrame;
                 firstFrame.setFromPixels(hiddenPlayer.getPixels());
+                
                 framePair.first = firstFrame;
                 
                 learnFirstFrame = false;
@@ -118,11 +131,27 @@ void VideoLibrary::update() {
         
         // Check if we finished processing the video
         if(hiddenPlayer.getIsMovieDone()) {
+            float numFrames = (float)diffs.size();
+            
+            float finalLuminance = sumAvgLuminances / numFrames;
+            float avgNumFaces = (float)sumNumFaces / numFrames;
+            
+            // Save values in XML
+            XML.pushTag(metadataTag);
+            XML.pushTag(videoNames[lastProcessedIdx + 1]);
+            
+            XML.addValue("LUMINANCE", finalLuminance);
+            XML.addValue("NUM-FACES", avgNumFaces);
+            XML.saveFile(metadataFile);
+            
+            XML.popTag();
+            XML.popTag();
+            
             // Sort by diff descending
             sort(diffs.rbegin(), diffs.rend(), VideoLibrary::absDiffsCompare);
             
             // Get top 10 diffs
-            vector<DiffFrame> topDiffs (diffs.begin(), diffs.begin() + NUM_PREVIEW_FRAMES);
+            vector<DiffFrame> topDiffs (diffs.begin(), diffs.begin() + min((int)diffs.size(), NUM_PREVIEW_FRAMES));
             
             // Sort by original index to get original order
             sort(topDiffs.begin(), topDiffs.end(), VideoLibrary::originalIdxCompare);
@@ -155,6 +184,11 @@ void VideoLibrary::update() {
             frameStepCounter = 0;
             hiddenPlayer.closeMovie();
             
+            colorProcessed = false;
+            
+            sumAvgLuminances = 0.0f;
+            sumNumFaces = 0;
+            
             learnFirstFrame = true;
             learnSecFrame = true;
             
@@ -166,7 +200,10 @@ void VideoLibrary::update() {
         // Check if we processed all videos
         if(lastProcessedIdx == dir.size() - 1) {
             videosProcessed = true;
+            statusMsg = VIDEOS_PROCESSED_MSG;
         }
+    } else {
+        statusMsg = VIDEOS_PROCESSED_MSG;
     }
     
     
@@ -177,6 +214,9 @@ void VideoLibrary::draw() {
     tags.draw();
     videoBrowser->draw();
     player->draw();
+    
+    ofSetColor(ofColor::black);
+    ofDrawBitmapString(statusMsg, 600, 100);
 }
 
 void VideoLibrary::key_pressed(int key) {
@@ -193,6 +233,11 @@ string VideoLibrary::extractVideoName(string path) {
 }
 
 void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) {
+    if(!colorProcessed) {
+        getColorFirstMoment(first);
+        colorProcessed = true;
+    }
+    
     ofxCvGrayscaleImage grayFirst;
     ofxCvGrayscaleImage graySecond;
     
@@ -205,11 +250,41 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
     ofPixels & pixelsFirst = grayFirst.getPixels();
     ofPixels & pixelsSecond = graySecond.getPixels();
     
-    for(int i = 0; i < pixelsFirst.size(); i++) {
-        // pixelsFirst and pixelsSecond will have the same size
-        histFirst[pixelsFirst[i]]++;
-        histSecond[pixelsSecond[i]]++;
+    
+    ofPixels & colorPixelsFirst = first.getPixels();
+    int nChannels = (int)colorPixelsFirst.getNumChannels();
+    
+    int w = (int)pixelsFirst.getWidth();
+    int h = (int)pixelsFirst.getHeight();
+    
+    ofxCvHaarFinder finder;
+    finder.setup(haarCascadeXmlPath);
+    ofImage ofImageFirst;
+    
+    ofImageFirst.allocate(w, h, OF_IMAGE_COLOR);
+    ofImageFirst.setFromPixels(colorPixelsFirst);
+    
+    // Find number of faces in current frame
+    finder.findHaarObjects(ofImageFirst);
+    sumNumFaces += finder.blobs.size();
+    
+    float sumLuminances = 0.0f;
+    
+    for (int i = 0; i < w; i++) {
+        for (int j = 0; j < h; j++) {
+            histFirst[pixelsFirst[j * w + i]]++;
+            histSecond[pixelsSecond[j * w + i]]++;
+            
+            unsigned char r = colorPixelsFirst[(j * w + i) * nChannels];
+            unsigned char g = colorPixelsFirst[(j * w + i) * nChannels + 1];
+            unsigned char b = colorPixelsFirst[(j * w + i) * nChannels + 2];
+            
+            float pixelLuminance = 0.2125 * r + 0.7154 * g + 0.0721 * b;
+            sumLuminances += pixelLuminance;
+        }
     }
+    
+    sumAvgLuminances += sumLuminances / (w * h);
     
     int absDiff = compareHistograms(histFirst, histSecond);
     
@@ -222,6 +297,44 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
     df.originalIdx = (int)diffs.size();
     
     diffs.push_back(df);
+    
+    
+}
+
+void VideoLibrary::getColorFirstMoment(ofxCvColorImage frame) {
+    vector<int> redHist (256, 0);
+    vector<int> greenHist (256, 0);
+    vector<int> blueHist (256, 0);
+    
+    ofPixels & pixels = frame.getPixels();
+    
+    
+    for(auto & pixel : pixels.getPixelsIter()) {
+        ofColor pixelColor = pixel.getColor();
+        
+        redHist[pixelColor.r]++;
+        greenHist[pixelColor.g]++;
+        blueHist[pixelColor.b]++;
+    }
+    
+    // Get the top values in every channel
+    int maxRed = (int)distance(redHist.begin(), max_element(redHist.begin(), redHist.end()));
+    int maxGreen = (int)distance(greenHist.begin(), max_element(greenHist.begin(), greenHist.end()));
+    int maxBlue = (int)distance(blueHist.begin(), max_element(blueHist.begin(), blueHist.end()));
+    
+    XML.pushTag(metadataTag);
+    XML.pushTag(videoNames[lastProcessedIdx + 1]);
+    int tagNum = XML.addTag("COLOR");
+    
+    // Save values in XML file
+    XML.setValue("COLOR:R", maxRed, tagNum);
+    XML.setValue("COLOR:G", maxGreen, tagNum);
+    XML.setValue("COLOR:B", maxBlue, tagNum);
+    
+    XML.popTag();
+    XML.popTag();
+    XML.saveFile(metadataFile);
+    
 }
 
 int VideoLibrary::compareHistograms(vector<int> first, vector<int> second) {

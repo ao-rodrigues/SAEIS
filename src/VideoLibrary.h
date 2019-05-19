@@ -22,6 +22,11 @@ class VideoLibrary {
     const string lastProcessedTag = "LAST-PROCESSED";
     const string previewFramesPath = "micons/";
     
+    const string haarCascadeXmlPath = "haar_cascades/haarcascade_frontalface_default.xml";
+    
+    const string PROCESSING_VIDEOS_MSG = "Processing video(s)...";
+    const string VIDEOS_PROCESSED_MSG = "Video processing done!";
+    
     const int NUM_PREVIEW_FRAMES = 10;
     
     const int frameStep = 10;
@@ -44,6 +49,10 @@ class VideoLibrary {
     int lastProcessedIdx;
     
     bool videosProcessed;
+    bool colorProcessed;
+    
+    float sumAvgLuminances;
+    int sumNumFaces;
     
     pair<ofxCvColorImage, ofxCvColorImage> framePair;
     bool learnFirstFrame, learnSecFrame;
@@ -59,6 +68,7 @@ public:
     
 protected:
     void processVideos();
+    void getColorFirstMoment(ofxCvColorImage frame);
     void processFrames(ofxCvColorImage first, ofxCvColorImage second);
     void getPreviewFrames(string path, string name);
     
