@@ -1,10 +1,13 @@
 #include "Player.h"
 
 Player::Player()
-: xPos(0), yPos(0), videoXPos(0), videoYPos(0), width(1024), height(768), videoWidth(1024), videoHeight(1024){}
+: xPos(0), yPos(0), videoXPos(0), videoYPos(0), width(1024), height(768), videoWidth(1024), videoHeight(1024){
+    vidPath = "";
+}
 
 Player::Player(float x, float y, float w, float h)
 : xPos(x), yPos(y), width(w), height(h){
+    vidPath = "";
     player.setLoopState(OF_LOOP_NORMAL);
 }
 
@@ -14,6 +17,7 @@ void Player::load(const string path) {
     }
     
     player.load(path);
+    vidPath = path;
     
     float vidW = player.getWidth();
     float vidH = player.getHeight();
@@ -64,6 +68,9 @@ void Player::keyPress(int key) {
 }
 
 void Player::draw() {
+    ofSetColor(ofColor::black);
+    ofDrawBitmapString("Now Playing: " + vidPath, xPos, yPos - 15);
+    
     if (player.isLoaded()){
         ofSetColor(ofColor::black);
         ofDrawRectangle(xPos, yPos, width, height);
@@ -78,19 +85,6 @@ void Player::draw() {
         ofDrawRectangle(xPos, yPos, width, height);
     }
 }
-
-/*
-void Player::draw(float x, float y) {
-    ofSetColor(ofColor::black);
-    ofDrawRectangle(x, y, width, height);
-    
-    ofSetColor(ofColor::white);
-    player.draw(x, y, videoWidth, videoHeight);
-}
- 
- */
-
-
 
 void Player::update() {
     if(player.isLoaded()) {

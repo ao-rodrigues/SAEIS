@@ -1,5 +1,6 @@
 #include "VideoLibrary.h"
 #include "ofApp.h"
+#include <opencv2/imgproc/imgproc.hpp>
 
 VideoLibrary::VideoLibrary() {
     ofBackground(ofColor::white);
@@ -37,6 +38,10 @@ VideoLibrary::VideoLibrary() {
         
         sumAvgLuminances = 0.0f;
         sumNumFaces = 0;
+        sumVerPixels = 0;
+        sumHorPixels = 0;
+        sumDia45Pixels = 0;
+        sumDia135Pixels = 0;
         
         learnFirstFrame = true;
         learnSecFrame = true;
@@ -54,8 +59,9 @@ VideoLibrary::VideoLibrary() {
             videoPaths.push_back(path);
         }
          
-        tags.setup("Search by tag", "");
-        tags.setPosition(600, 50);
+        tagSearchInput.setup("Search by tag", "");
+        tagSearchInput.setPosition(600, 50);
+        tagSearchInput.addListener(this, &VideoLibrary::tagSearchInputSubmit);
         
         player = std::make_shared<Player>(50, 600, 480, 270);
         videoBrowser = std::make_unique<VideoBrowser>(50, 50, 500, 500, 200, 200, videoPaths, player);
@@ -99,6 +105,10 @@ void VideoLibrary::update() {
             
             XML.pushTag(metadataTag);
             XML.addTag(videoNames[lastProcessedIdx + 1]);
+            XML.pushTag(videoNames[lastProcessedIdx + 1]);
+            XML.addTag("KEYWORDS");
+            
+            XML.popTag();
             XML.popTag();
             XML.saveFile(metadataFile);
         }
@@ -136,12 +146,27 @@ void VideoLibrary::update() {
             float finalLuminance = sumAvgLuminances / numFrames;
             float avgNumFaces = (float)sumNumFaces / numFrames;
             
+            float avgVerPixels = (float)sumVerPixels / numFrames;
+            float avgHorPixels = (float)sumHorPixels / numFrames;
+            float avgDia45Pixels = (float)sumDia45Pixels / numFrames;
+            float avgDia135Pixels = (float)sumDia135Pixels / numFrames;
+            
             // Save values in XML
             XML.pushTag(metadataTag);
             XML.pushTag(videoNames[lastProcessedIdx + 1]);
             
             XML.addValue("LUMINANCE", finalLuminance);
             XML.addValue("NUM-FACES", avgNumFaces);
+            XML.addTag("EDGE-DIST");
+            XML.pushTag("EDGE-DIST");
+            
+            XML.addValue("VERTICAL", avgVerPixels);
+            XML.addValue("HORIZONTAL", avgHorPixels);
+            XML.addValue("DIA-45", avgDia45Pixels);
+            XML.addValue("DIA-135", avgDia135Pixels);
+            
+            XML.popTag();
+            
             XML.saveFile(metadataFile);
             
             XML.popTag();
@@ -188,6 +213,10 @@ void VideoLibrary::update() {
             
             sumAvgLuminances = 0.0f;
             sumNumFaces = 0;
+            sumVerPixels = 0;
+            sumHorPixels = 0;
+            sumDia45Pixels = 0;
+            sumDia135Pixels = 0;
             
             learnFirstFrame = true;
             learnSecFrame = true;
@@ -211,7 +240,7 @@ void VideoLibrary::update() {
 }
 
 void VideoLibrary::draw() {
-    tags.draw();
+    tagSearchInput.draw();
     videoBrowser->draw();
     player->draw();
     
@@ -230,6 +259,32 @@ string VideoLibrary::extractVideoName(string path) {
     std::size_t extStart = baseFilename.find_last_of(".");
     
     return baseFilename.substr(0, extStart);
+}
+
+void VideoLibrary::processEdgeDistribution(ofxCvColorImage colorImg) {
+    cv::Mat colorMat = cv::cvarrToMat(colorImg.getCvImage());
+    cv::Mat greyMat;
+    cv::cvtColor(colorMat, greyMat, CV_BGR2GRAY);
+    
+    // Create filter kernels
+    cv::Mat verEdgeFilter = (cv::Mat_<double>(2, 2) << 1, -1, 1, -1);
+    cv::Mat horEdgeFilter = (cv::Mat_<double>(2, 2) << 1, 1, -1, -1);
+    cv::Mat dia45EdgeFilter = (cv::Mat_<double>(2, 2) << sqrt(2), 0, 0, -1 * sqrt(2));
+    cv::Mat dia135EdgeFilter = (cv::Mat_<double>(2, 2) << 0, sqrt(2), -1 * sqrt(2), 0);
+    
+    // Instantiate destination matrices
+    cv::Mat verEdgeDest, horEdgeDest, dia45EdgeDest, dia135EdgeDest;
+    
+    cv::filter2D(greyMat, verEdgeDest, -1, verEdgeFilter);
+    cv::filter2D(greyMat, horEdgeDest, -1, horEdgeFilter);
+    cv::filter2D(greyMat, dia45EdgeDest, -1, dia45EdgeFilter);
+    cv::filter2D(greyMat, dia135EdgeDest, -1, dia135EdgeFilter);
+    
+    // Count relevant pixels
+    sumVerPixels += cv::countNonZero(verEdgeDest);
+    sumHorPixels += cv::countNonZero(horEdgeDest);
+    sumDia45Pixels += cv::countNonZero(dia45EdgeDest);
+    sumDia135Pixels += cv::countNonZero(dia135EdgeDest);
 }
 
 void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) {
@@ -263,6 +318,7 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
     
     ofImageFirst.allocate(w, h, OF_IMAGE_COLOR);
     ofImageFirst.setFromPixels(colorPixelsFirst);
+    
     
     // Find number of faces in current frame
     finder.findHaarObjects(ofImageFirst);
@@ -298,6 +354,7 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
     
     diffs.push_back(df);
     
+    processEdgeDistribution(first);
     
 }
 
@@ -345,5 +402,54 @@ int VideoLibrary::compareHistograms(vector<int> first, vector<int> second) {
     }
     
     return absDiff;
+}
+
+void split(const string & str, char c, set<string> & v) {
+    string::size_type i = 0;
+    string::size_type j = str.find(c);
+    
+    if(j == string::npos) {
+        v.insert(str);
+        return;
+    }
+    
+    while(j != string::npos) {
+        v.insert(str.substr(i, j - 1));
+        i = ++j;
+        j = str.find(c, j);
+        
+        if(j == string::npos) {
+            v.insert(str.substr(i, str.length()));
+        }
+    }
+}
+
+void VideoLibrary::tagSearchInputSubmit(string & input) {
+    set<string> tags;
+    split(input, ',', tags);
+    
+    XML.pushTag(metadataTag);
+    for(int i = 0; i < videoNames.size(); i++) {
+        XML.pushTag(videoNames[i]);
+        XML.pushTag("KEYWORDS");
+        
+        int numKeywords = XML.getNumTags("KEYWORD");
+        
+        for(int j = 0; j < numKeywords; j++) {
+            string keyword = XML.getValue("KEYWORD", "", j);
+            bool setEnabled;
+            
+            if(tags.find(keyword) != tags.end()) {
+                // This video has one of the tags received
+                setEnabled = true;
+            } else {
+                setEnabled = false;
+            }
+            
+            videoBrowser->setThumbnailEnabled(dir.getPath(i), setEnabled);
+        }
+        
+        
+    }
 }
 

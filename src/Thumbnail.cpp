@@ -6,53 +6,10 @@ Thumbnail::Thumbnail(float x, float y, float w, float h, string vidPath, shared_
 : xPos(x), yPos(y), width(w), height(h - NAME_HEIGHT), videoPath(vidPath), selected(false), player(plyr){
     ofRegisterMouseEvents(this);
     
-    //videoPlayer.load(videoName);
-    //videoPlayer.setLoopState(OF_LOOP_NORMAL);
     hasPreviewFrames = false;
     
     videoName = extractVideoName(videoPath);
     enabled = false;
-    
-    /*
-    bool success = thumbnail.load(THUMBNAILS_PATH + videoName + ".png");
-    
-    float imgW, imgH;
-    
-    if(success) {
-        imgW = thumbnail.getWidth();
-        imgH = thumbnail.getHeight();
-    
-        
-        float aspectRatio = imgW / imgH;
-        
-        if(imgW > imgH) {
-            // Letterboxing
-            fixedW = width;
-            fixedH = width / aspectRatio;
-            
-            fixedXPos = xPos;
-            fixedYPos = yPos + ((height - fixedH) / 2.0);
-            
-        } else {
-            // Pillarboxing
-            fixedW = height * aspectRatio;
-            fixedH = height;
-            
-            fixedXPos = xPos + ((width - fixedW) / 2.0);
-            fixedYPos = yPos;
-        }
-        
-    } else {
-        fixedW = width;
-        fixedH = height;
-        fixedXPos = xPos;
-        fixedYPos = yPos;
-        
-        // Make a gray placeholder image
-        thumbnail.allocate(fixedW, fixedH, OF_IMAGE_COLOR);
-        thumbnail.setColor(ofColor::gray);
-    }
-     */
     
     clickListener = ofEvents().mouseReleased.newListener(this, &Thumbnail::onMouseReleased);
     
@@ -68,54 +25,58 @@ bool Thumbnail::mouseOver() {
 }
 
 void Thumbnail::draw() {
-    if(selected) {
-        // Draw red border around Thumbnail
-        ofSetColor(ofColor::steelBlue);
-        ofDrawRectangle(xPos - BORDER_WIDTH, yPos - BORDER_WIDTH, width + 2 * BORDER_WIDTH, height + 2 * BORDER_WIDTH);
-    }
-    
-    if(hasPreviewFrames){
-        // Black background for possible letterboxing/pillarboxing
-        ofSetColor(ofColor::black);
-        ofDrawRectangle(xPos, yPos, width, height);
+    if(enabled){
+        // Only draw thumbnails that are enabled
         
-        ofTexture frame;
-        
-        if (mouseOver()){
-            // Start frames sequence
-            
-            // Get number of seconds from application start
-            float time = ofGetElapsedTimef();
-            
-            size_t n = previewFrames.size();
-            
-            // Get sequence duration
-            float duration = n / PREVIEW_FPS;
-            
-            float pos = fmodf(time, duration);
-            
-            // Calculate index of frame to show
-            int i = int(pos / duration * n);
-            
-            frame = previewFrames[i];
-        } else {
-            // Show first frame
-            frame = previewFrames[0];
+        if(selected) {
+            // Draw border around Thumbnail
+            ofSetColor(ofColor::dodgerBlue);
+            ofDrawRectangle(xPos - BORDER_WIDTH, yPos - BORDER_WIDTH, width + 2 * BORDER_WIDTH, height + 2 * BORDER_WIDTH);
         }
         
-        float fixedXPos, fixedYPos, fixedW, fixedH;
-        calcFixedDimensions(frame, fixedXPos, fixedYPos, fixedW, fixedH);
+        if(hasPreviewFrames){
+            // Black background for possible letterboxing/pillarboxing
+            ofSetColor(ofColor::black);
+            ofDrawRectangle(xPos, yPos, width, height);
+            
+            ofTexture frame;
+            
+            if (mouseOver()){
+                // Start frames sequence
+                
+                // Get number of seconds from application start
+                float time = ofGetElapsedTimef();
+                
+                size_t n = previewFrames.size();
+                
+                // Get sequence duration
+                float duration = n / PREVIEW_FPS;
+                
+                float pos = fmodf(time, duration);
+                
+                // Calculate index of frame to show
+                int i = int(pos / duration * n);
+                
+                frame = previewFrames[i];
+            } else {
+                // Show first frame
+                frame = previewFrames[0];
+            }
+            
+            float fixedXPos, fixedYPos, fixedW, fixedH;
+            calcFixedDimensions(frame, fixedXPos, fixedYPos, fixedW, fixedH);
+            
+            ofSetColor(ofColor::white);
+            frame.draw(fixedXPos, fixedYPos, fixedW, fixedH);
+        } else {
+            // Draw gray rectangle as placeholder
+            ofSetColor(ofColor::gray);
+            ofDrawRectangle(xPos, yPos, width, height);
+        }
         
-        ofSetColor(ofColor::white);
-        frame.draw(fixedXPos, fixedYPos, fixedW, fixedH);
-    } else {
-        // Draw gray rectangle as placeholder
-        ofSetColor(ofColor::gray);
-        ofDrawRectangle(xPos, yPos, width, height);
+        ofSetColor(ofColor::black);
+        ofDrawBitmapString(videoName, xPos, yPos + height + NAME_HEIGHT);
     }
-    
-    ofSetColor(ofColor::black);
-    ofDrawBitmapString(videoName, xPos, yPos + height + NAME_HEIGHT);
 }
 
 void Thumbnail::updatePreviewFrames(vector<ofTexture> frames) {
@@ -191,5 +152,13 @@ void Thumbnail::calcFixedDimensions(ofTexture frame, float & fixedXPos, float & 
         fixedXPos = xPos + ((width - fixedW) / 2.0);
         fixedYPos = yPos;
     }
+}
+
+void Thumbnail::addKeyword(const string kw) {
+    keywords.push_back(kw);
+}
+
+void Thumbnail::addKeywords(vector<string> kwds) {
+    keywords.insert(keywords.end(), kwds.begin(), kwds.end());
 }
 

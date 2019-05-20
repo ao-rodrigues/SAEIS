@@ -27,12 +27,6 @@ class VideoBrowser{
     
     vector<unique_ptr<TextToggle> > pageNumbers;
     
-    
-    
-    //unique_ptr<ofVideoPlayer> nowPlaying;
-    
-    //ofVec2f clickedPoint;
-    
 public:
     VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths, shared_ptr<Player> player);
     void draw();
@@ -42,4 +36,6 @@ public:
     void updatePreviewFrames(string vidPath, vector<ofTexture> frames);
     
     void update();
+    
+    void setThumbnailEnabled(string path, bool isEnabled);
 };

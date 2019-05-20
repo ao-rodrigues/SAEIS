@@ -18,8 +18,6 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
     maxElementsPerRow = (int)floor(width / elementW);
     maxRows = (int)floor(videoAreaHeight / elementH);
     
-    //thumbnailsByPath.reserve(videoPaths.size());
-    
     int numPages = ceil((float)videoPaths.size() / (float)(maxElementsPerRow * maxRows));
     thumbnailsByPage.reserve(numPages);
     pageNumbers.reserve(numPages);
@@ -149,8 +147,13 @@ void VideoBrowser::onPageNumClick(string & txt) {
 }
 
 void VideoBrowser::updatePreviewFrames(string vidPath, vector<ofTexture> frames) {
-    unordered_map<string, shared_ptr<Thumbnail>>::const_iterator found = thumbnailsByPath.find(vidPath);
+    unordered_map<string, shared_ptr<Thumbnail> >::const_iterator found = thumbnailsByPath.find(vidPath);
     
     found->second->updatePreviewFrames(frames);
+}
+
+void VideoBrowser::setThumbnailEnabled(string path, bool isEnabled) {
+    unordered_map<string, shared_ptr<Thumbnail> >::const_iterator found = thumbnailsByPath.find(path);
+    found->second->setEnabled(isEnabled);
 }
 

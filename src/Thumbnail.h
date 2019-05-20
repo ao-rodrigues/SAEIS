@@ -24,6 +24,7 @@ class Thumbnail{
     
     ofImage thumbnail;
     string videoPath, videoName;
+    vector<string> keywords;
     
     ofColor textColor;
     
@@ -55,6 +56,9 @@ public:
     void setSelected(bool isSelected);
     void setEnabled(bool isEnabled);
     string extractVideoName(string path);
+    
+    void addKeyword(const string kw);
+    void addKeywords(vector<string> kwds);
     
 protected:
     void calcFixedDimensions(ofTexture frame, float & fixedXPos, float & fixedYPos, float & fixedW, float & fixedH);

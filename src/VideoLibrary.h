@@ -24,12 +24,12 @@ class VideoLibrary {
     
     const string haarCascadeXmlPath = "haar_cascades/haarcascade_frontalface_default.xml";
     
-    const string PROCESSING_VIDEOS_MSG = "Processing video(s)...";
+    const string PROCESSING_VIDEOS_MSG = "Processing videos...";
     const string VIDEOS_PROCESSED_MSG = "Video processing done!";
     
     const int NUM_PREVIEW_FRAMES = 10;
     
-    const int frameStep = 10;
+    const int frameStep = 5;
     
     int frameStepCounter;
     
@@ -42,7 +42,7 @@ class VideoLibrary {
     shared_ptr<Player> player;
     unique_ptr<VideoBrowser> videoBrowser;
     
-    ofxInputField<string> tags;
+    ofxInputField<string> tagSearchInput;
     
     ofxXmlSettings XML;
     
@@ -53,6 +53,7 @@ class VideoLibrary {
     
     float sumAvgLuminances;
     int sumNumFaces;
+    int sumVerPixels, sumHorPixels, sumDia45Pixels, sumDia135Pixels;
     
     pair<ofxCvColorImage, ofxCvColorImage> framePair;
     bool learnFirstFrame, learnSecFrame;
@@ -74,7 +75,12 @@ protected:
     
     int compareHistograms(vector<int> first, vector<int> second);
     
+    void processEdgeDistribution(ofxCvColorImage colorImg);
+    
     static bool absDiffsCompare(const DiffFrame &i, const DiffFrame &j);
     static bool originalIdxCompare(const DiffFrame &i, const DiffFrame &j);
+    
+    void tagSearchInputSubmit(string & input);
+    
 };
 
