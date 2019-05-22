@@ -135,7 +135,8 @@ void VideoLibrary::update() {
             }
         }
         
-        if(hiddenPlayer.isFrameNew() && learnFirstFrame){
+        
+        if(hiddenPlayer.isFrameNew()){
             frameStepCounter++;
         }
         
@@ -151,12 +152,25 @@ void VideoLibrary::update() {
             float avgDia45Pixels = (float)sumDia45Pixels / numFrames;
             float avgDia135Pixels = (float)sumDia135Pixels / numFrames;
             
+            int rythm = calculateRythm();
+            string rythmLevel = "";
+            
+            if (rythm < 5) {
+                rythmLevel = LOW_RYTHM;
+            } else if (rythm >= 5 && rythm < 15) {
+                rythmLevel = MED_RYTHM;
+            } else if (rythm >= 15){
+                rythmLevel = HIGH_RYTHM;
+            }
+            
             // Save values in XML
             XML.pushTag(metadataTag);
             XML.pushTag(videoNames[lastProcessedIdx + 1]);
             
             XML.addValue("LUMINANCE", finalLuminance);
             XML.addValue("NUM-FACES", avgNumFaces);
+            XML.addValue("RYTHM", rythmLevel);
+            
             XML.addTag("EDGE-DIST");
             XML.pushTag("EDGE-DIST");
             
@@ -392,6 +406,22 @@ void VideoLibrary::getColorFirstMoment(ofxCvColorImage frame) {
     XML.popTag();
     XML.saveFile(metadataFile);
     
+}
+
+int VideoLibrary::calculateRythm() {
+    int rythm = 0;
+    int numPixels = diffs[0].tex.getWidth() * diffs[0].tex.getHeight();
+    
+    // Baseline a third the pixels in the image have changed
+    float baseline = (float)numPixels / 3.0f;
+    
+    for(int i = 0; i < diffs.size(); i++) {
+        if(diffs[i].absDiff >= baseline) {
+            rythm++;
+        }
+    }
+    
+    return rythm;
 }
 
 int VideoLibrary::compareHistograms(vector<int> first, vector<int> second) {

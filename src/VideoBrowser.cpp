@@ -52,7 +52,8 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
 
     //currPageIdx++;
     
-    for (string p : videoPaths) {
+    for (int i = 0; i < videoPaths.size(); i++) {
+        string p = videoPaths[i];
         shared_ptr<Thumbnail> thPtr = make_shared<Thumbnail>(thumbX, thumbY, videoW, videoH, p, player);
 
         thumbnailsByPage[currPageIdx].push_back(thPtr);
@@ -68,8 +69,8 @@ VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, f
             numRows++;
             elementsInRow = 0;
             
-            // Check if we reached row limit and need to add a new page
-            if(numRows >= maxRows) {
+            // Check if we reached row limit and need to add a new page, except if we already processed the last element
+            if(i < videoPaths.size() - 1 && numRows >= maxRows) {
                 currPageIdx++;
                 unique_ptr<TextToggle> ttPtr = make_unique<TextToggle>(xPos + (currPageIdx * INDIVIDUAL_PAGE_NUMS_WIDTH),
                                                                        yPos + videoAreaHeight,

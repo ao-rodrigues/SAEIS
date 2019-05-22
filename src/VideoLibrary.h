@@ -27,6 +27,10 @@ class VideoLibrary {
     const string PROCESSING_VIDEOS_MSG = "Processing videos...";
     const string VIDEOS_PROCESSED_MSG = "Video processing done!";
     
+    const string LOW_RYTHM = "LOW";
+    const string MED_RYTHM = "MEDIUM";
+    const string HIGH_RYTHM = "HIGH";
+    
     const int NUM_PREVIEW_FRAMES = 10;
     
     const int frameStep = 5;
@@ -76,6 +80,8 @@ protected:
     int compareHistograms(vector<int> first, vector<int> second);
     
     void processEdgeDistribution(ofxCvColorImage colorImg);
+    
+    int calculateRythm();
     
     static bool absDiffsCompare(const DiffFrame &i, const DiffFrame &j);
     static bool originalIdxCompare(const DiffFrame &i, const DiffFrame &j);
