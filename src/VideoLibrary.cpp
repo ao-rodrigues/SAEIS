@@ -378,44 +378,34 @@ void VideoLibrary::getColorFirstMoment(ofxCvColorImage frame) {
     vector<int> greenHist (256, 0);
     vector<int> blueHist (256, 0);
     */
+    
+    vector<int> hueHist (360, 0);
      
-    float sumHue = 0.0f;
+    //float sumHue = 0.0f;
     
     ofPixels & pixels = frame.getPixels();
     
     for(auto & pixel : pixels.getPixelsIter()) {
         ofColor pixelColor = pixel.getColor();
-        sumHue += pixelColor.getHue();
-        
-        /*
-        redHist[pixelColor.r]++;
-        greenHist[pixelColor.g]++;
-        blueHist[pixelColor.b]++;
-         */
+        hueHist[(int)pixelColor.getHueAngle()]++;
     }
     
-    /*
-    // Get the top values in every channel
-    int maxRed = (int)distance(redHist.begin(), max_element(redHist.begin(), redHist.end()));
-    int maxGreen = (int)distance(greenHist.begin(), max_element(greenHist.begin(), greenHist.end()));
-    int maxBlue = (int)distance(blueHist.begin(), max_element(blueHist.begin(), blueHist.end()));
-    */
     
-    float avgHue = sumHue / (pixels.getWidth() * pixels.getHeight());
+    int maxHueCount = -1;
+    int dominantHue = 0;
+    
+    for(int i = 0; i < hueHist.size(); i++) {
+        if(hueHist[i] > maxHueCount) {
+            maxHueCount = hueHist[i];
+            dominantHue = i;
+        }
+    }
      
      
     XML.pushTag(metadataTag);
     XML.pushTag(videoNames[lastProcessedIdx + 1]);
     int tagNum = XML.addTag("COLOR");
-    
-    /*
-    // Save values in XML file
-    XML.setValue("COLOR:R", maxRed, tagNum);
-    XML.setValue("COLOR:G", maxGreen, tagNum);
-    XML.setValue("COLOR:B", maxBlue, tagNum);
-    */
-    
-    XML.setValue("COLOR:HUE", avgHue, tagNum);
+    XML.setValue("COLOR:HUE", dominantHue, tagNum);
      
     XML.popTag();
     XML.popTag();
