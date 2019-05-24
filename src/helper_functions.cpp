@@ -10,7 +10,7 @@ void helper_functions::split(const std::string & str, char c, std::set<std::stri
     }
     
     while(j != std::string::npos) {
-        v.insert(str.substr(i, j - 1));
+        v.insert(str.substr(i, j));
         i = ++j;
         j = str.find(c, j);
         

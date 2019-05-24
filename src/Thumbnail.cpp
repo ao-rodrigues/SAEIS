@@ -11,6 +11,7 @@ Thumbnail::Thumbnail(float x, float y, float w, float h, string vidPath, shared_
     
     videoName = helper_functions::extractVideoName(videoPath);
     enabled = false;
+    visible = true;
     
     clickListener = ofEvents().mouseReleased.newListener(this, &Thumbnail::onMouseReleased);
     
@@ -26,8 +27,8 @@ bool Thumbnail::mouseOver() {
 }
 
 void Thumbnail::draw() {
-    if(enabled){
-        // Only draw thumbnails that are enabled
+    if(enabled && visible){
+        // Only draw thumbnails that are enabled and visible
         
         if(selected) {
             // Draw border around Thumbnail
@@ -95,7 +96,7 @@ void Thumbnail::mouseEntered(ofMouseEventArgs &args){}
 void Thumbnail::mouseExited(ofMouseEventArgs &args){}
 
 void Thumbnail::onMouseReleased(ofMouseEventArgs &args) {
-    if(inside(args.x, args.y) && enabled) {
+    if(inside(args.x, args.y) && enabled && visible) {
         // Toggle selected status
         selected = true;
         
@@ -119,6 +120,10 @@ void Thumbnail::setSelected(bool isSelected) {
 
 void Thumbnail::setEnabled(bool isEnabled) {
     enabled = isEnabled;
+}
+
+void Thumbnail::setVisible(bool isVisible) {
+    visible = isVisible;
 }
 
 void Thumbnail::calcFixedDimensions(ofTexture frame, float & fixedXPos, float & fixedYPos, float & fixedW, float & fixedH) {

@@ -17,12 +17,30 @@ class VideoBrowser{
     const string KEYWORDS_LIST_START = "Keywords: ";
     const string KEYWORDS_INPUT_PROMPT = "Add keywords";
     
-    string keywordsList;
+    const string COLOR_DISPLAY = "Color (hue): ";
+    const string LUMINANCE_DISPLAY = "Luminance: ";
+    const string NUM_FACES_DISPLAY = "Num. faces (avg): ";
+    const string RYTHM_DISPLAY = "Rythm: ";
+    
+    const string EDGE_DIST_DISPLAY = "Edge distribution: ";
+    const string EDGE_DIST_VERT = "Vertical: ";
+    const string EDGE_DIST_HOR = "Horizontal: ";
+    const string EDGE_DIST_DIA45 = "Diagonal 45deg: ";
+    const string EDGE_DIST_DIA135 = "Diagonal 135deg: ";
+    
+    
     string selectedVideoName;
     string metadataFile;
     
+    string keywordsList;
+    string videoColor;
+    string videoLuminance;
+    string videoNumFaces;
+    string videoRythm;
+    string videoEdgesVert, videoEdgesHor, videoEdgesDia45, videoEdgesDia135;
+    
     float xPos, yPos;
-    float tagsXPos, tagsYPos;
+    float metadataXPos, metadataYPos;
     float width, height;
     float videoW, videoH;
 
@@ -30,7 +48,7 @@ class VideoBrowser{
     int maxRows;
     int currentPage;
     
-    bool displayKeywords;
+    bool displayMetadata;
     bool videoSelected;
     
     vector<vector<shared_ptr<Thumbnail> > > thumbnailsByPage;
@@ -42,7 +60,7 @@ class VideoBrowser{
     
     ofxInputField<string> addKeywordInput;
     
-    ofxXmlSettings XML;
+    ofxXmlSettings *XML;
     
 public:
     VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths, shared_ptr<Player> player);
@@ -56,11 +74,12 @@ public:
     void update();
     
     void setThumbnailEnabled(string path, bool isEnabled);
+    void setThumbnailVisible(string path, bool isVisible);
     
-    void setupKeywordsDisplay(float x, float y, string metadataFile);
+    void setupMetadataDisplay(float x, float y, ofxXmlSettings &xml);
     
 protected:
-    void drawKeywordsDisplay();
+    void drawMetadataDisplay();
     void onThumbnailSelected(string & videoName);
     void onKeywordsInputSubmit(string & input);
 };

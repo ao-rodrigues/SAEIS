@@ -61,11 +61,11 @@ VideoLibrary::VideoLibrary() {
         }
          
         tagSearchInput.setup("Search by tag", "");
-        tagSearchInput.setPosition(600, 50);
+        tagSearchInput.setPosition(50, 50);
         tagSearchInput.addListener(this, &VideoLibrary::tagSearchInputSubmit);
         
-        player = std::make_shared<Player>(50, 600, 480, 270);
-        videoBrowser = std::make_unique<VideoBrowser>(50, 50, 500, 500, 200, 200, videoPaths, player);
+        player = std::make_shared<Player>(50, 650, 480, 270);
+        videoBrowser = std::make_unique<VideoBrowser>(50, 90, 600, 480, 200, 200, videoPaths, player);
         
         // Grab preview frames of already processed videos
         for(int i = 0; i <= lastProcessedIdx; i++) {
@@ -81,7 +81,7 @@ VideoLibrary::VideoLibrary() {
             videoBrowser->updatePreviewFrames(dir.getPath(i), frames);
         }
         
-        videoBrowser->setupKeywordsDisplay(550, 610, metadataFile);
+        videoBrowser->setupMetadataDisplay(550, 660, XML);
         
     } else {
         exit(-1);
@@ -262,7 +262,7 @@ void VideoLibrary::draw() {
     player->draw();
     
     ofSetColor(ofColor::black);
-    ofDrawBitmapString(statusMsg, 600, 100);
+    ofDrawBitmapString(statusMsg, 270, 60);
 }
 
 void VideoLibrary::key_pressed(int key) {
@@ -436,31 +436,41 @@ int VideoLibrary::compareHistograms(vector<int> first, vector<int> second) {
 }
 
 void VideoLibrary::tagSearchInputSubmit(string & input) {
+    bool emptyInput = (input.length() == 0);
+    
     set<string> tags;
     helper_functions::split(input, ',', tags);
     
     XML.pushTag(metadataTag);
     for(int i = 0; i < videoNames.size(); i++) {
+        if(emptyInput) {
+            videoBrowser->setThumbnailVisible(dir.getPath(i), true);
+            continue;
+        }
+        
         XML.pushTag(videoNames[i]);
         XML.pushTag("KEYWORDS");
         
         int numKeywords = XML.getNumTags("KEYWORD");
         
+        bool setVisible = false;
+        
         for(int j = 0; j < numKeywords; j++) {
             string keyword = XML.getValue("KEYWORD", "", j);
-            bool setEnabled;
             
             if(tags.find(keyword) != tags.end()) {
                 // This video has one of the tags received
-                setEnabled = true;
-            } else {
-                setEnabled = false;
+                setVisible = true;
+                break;
             }
-            
-            videoBrowser->setThumbnailEnabled(dir.getPath(i), setEnabled);
         }
         
+        XML.popTag();
+        XML.popTag();
         
+        videoBrowser->setThumbnailVisible(dir.getPath(i), setVisible);
     }
+    
+    XML.popTag();
 }
 

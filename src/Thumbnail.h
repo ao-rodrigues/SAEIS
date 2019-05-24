@@ -18,7 +18,7 @@ class Thumbnail{
     
     float width, height;
     
-    bool selected, enabled, hasPreviewFrames;
+    bool selected, enabled, visible, hasPreviewFrames;
     
     shared_ptr<Player> player;
     
@@ -58,6 +58,7 @@ public:
     bool inside(float x, float y);
     void setSelected(bool isSelected);
     void setEnabled(bool isEnabled);
+    void setVisible(bool isVisible);
     
     void addKeyword(const string kw);
     void addKeywords(vector<string> kwds);

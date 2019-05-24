@@ -4,7 +4,7 @@
 
 // This implementation assumes that there's space for at least one element per page
 VideoBrowser::VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths, shared_ptr<Player> player)
-: xPos(x), yPos(y), width(w), height(h), videoW(elementW - 2 * SPACING_X), videoH(elementH - 2 * SPACING_Y), displayKeywords(false) {
+: xPos(x), yPos(y), width(w), height(h), videoW(elementW - 2 * SPACING_X), videoH(elementH - 2 * SPACING_Y), displayMetadata(false) {
     
     if(videoW > width || videoH > height) {
         // Random exception number
@@ -125,8 +125,8 @@ void VideoBrowser::draw(){
         pageNumbers[i]->draw();
     }
     
-    if(displayKeywords) {
-        drawKeywordsDisplay();
+    if(displayMetadata) {
+        drawMetadataDisplay();
     }
 }
 
@@ -165,51 +165,61 @@ void VideoBrowser::setThumbnailEnabled(string path, bool isEnabled) {
     found->second->setEnabled(isEnabled);
 }
 
-void VideoBrowser::setupKeywordsDisplay(float x, float y, string xmlFile) {
-    metadataFile = xmlFile;
-    XML.loadFile(metadataFile);
-    tagsXPos = x;
-    tagsYPos = y;
-    
-    addKeywordInput.setup(KEYWORDS_INPUT_PROMPT, "");
-    addKeywordInput.setPosition(x, y + 30);
-    addKeywordInput.addListener(this, &VideoBrowser::onKeywordsInputSubmit);
-    
-    displayKeywords = true;
+void VideoBrowser::setThumbnailVisible(string path, bool isVisible) {
+    unordered_map<string, shared_ptr<Thumbnail> >::const_iterator found = thumbnailsByPath.find(path);
+    found->second->setVisible(isVisible);
 }
 
-void VideoBrowser::drawKeywordsDisplay() {
-    ofDrawBitmapString(KEYWORDS_LIST_START + keywordsList, tagsXPos, tagsYPos);
+void VideoBrowser::setupMetadataDisplay(float x, float y, ofxXmlSettings & xml) {
+    XML = &xml;
+    metadataXPos = x;
+    metadataYPos = y;
     
+    displayMetadata = true;
+}
+
+void VideoBrowser::drawMetadataDisplay() {
     if(videoSelected) {
+        ofDrawBitmapString(KEYWORDS_LIST_START + keywordsList, metadataXPos, metadataYPos);
         addKeywordInput.draw();
+        
+        ofDrawBitmapString(COLOR_DISPLAY + videoColor, metadataXPos, metadataYPos + 70);
+        ofDrawBitmapString(LUMINANCE_DISPLAY + videoLuminance, metadataXPos, metadataYPos + 90);
+        ofDrawBitmapString(NUM_FACES_DISPLAY + videoNumFaces, metadataXPos, metadataYPos + 110);
+        ofDrawBitmapString(RYTHM_DISPLAY + videoRythm, metadataXPos, metadataYPos + 130);
+        
+        ofDrawBitmapString(EDGE_DIST_DISPLAY, metadataXPos, metadataYPos + 150);
+        ofDrawBitmapString(EDGE_DIST_VERT + videoEdgesVert, metadataXPos + 20, metadataYPos + 170);
+        ofDrawBitmapString(EDGE_DIST_HOR + videoEdgesHor, metadataXPos + 20, metadataYPos + 190);
+        ofDrawBitmapString(EDGE_DIST_DIA45 + videoEdgesDia45, metadataXPos + 20, metadataYPos + 210);
+        ofDrawBitmapString(EDGE_DIST_DIA135 + videoEdgesDia135, metadataXPos + 20, metadataYPos + 230);
     }
 }
 
 void VideoBrowser::onKeywordsInputSubmit(string & input) {
-    if(videoSelected) {
+    if(videoSelected && input.length() != 0) {
         set<string> keywords;
         helper_functions::split(input, ',', keywords);
         
-        XML.pushTag("METADATA");
-        XML.pushTag(selectedVideoName);
-        XML.pushTag("KEYWORDS");
+        XML->pushTag("METADATA");
+        XML->pushTag(selectedVideoName);
+        XML->pushTag("KEYWORDS");
         
         for(string kw : keywords) {
-            XML.addValue("KEYWORD", kw);
+            XML->addValue("KEYWORD", kw);
             
-            if(XML.getNumTags("KEYWORD") == 1) {
+            if(XML->getNumTags("KEYWORD") == 1) {
                 keywordsList += kw;
             } else {
                 keywordsList += ", " + kw;
             }
         }
         
-        XML.saveFile(metadataFile);
+        XML->saveFile(metadataFile);
         
-        XML.popTag();
-        XML.popTag();
-        XML.popTag();
+        XML->popTag();
+        XML->popTag();
+        XML->popTag();
     }
 }
 
@@ -217,16 +227,20 @@ void VideoBrowser::onThumbnailSelected(string & videoName) {
     videoSelected = true;
     selectedVideoName = videoName;
     
+    addKeywordInput.setup(KEYWORDS_INPUT_PROMPT, "");
+    addKeywordInput.setPosition(metadataXPos, metadataYPos + 20);
+    addKeywordInput.addListener(this, &VideoBrowser::onKeywordsInputSubmit);
+    
     keywordsList = "";
     
-    XML.pushTag("METADATA");
-    XML.pushTag(selectedVideoName);
-    XML.pushTag("KEYWORDS");
+    XML->pushTag("METADATA");
+    XML->pushTag(selectedVideoName);
+    XML->pushTag("KEYWORDS");
     
-    int numTags = XML.getNumTags("KEYWORD");
+    int numTags = XML->getNumTags("KEYWORD");
     
     for (int i = 0; i < numTags; i++) {
-        string kw = XML.getValue("KEYWORD", "", i);
+        string kw = XML->getValue("KEYWORD", "", i);
         
         if (i == 0) {
             keywordsList += kw;
@@ -234,9 +248,24 @@ void VideoBrowser::onThumbnailSelected(string & videoName) {
             keywordsList += ", " + kw;
         }
     }
+    XML->popTag();
     
-    XML.popTag();
-    XML.popTag();
-    XML.popTag();
+    XML->pushTag("COLOR");
+    videoColor = to_string(XML->getValue("HUE", 0));
+    XML->popTag();
+    
+    videoLuminance = to_string(XML->getValue("LUMINANCE", 0));
+    videoNumFaces = to_string(XML->getValue("NUM-FACES", 0));
+    videoRythm = XML->getValue("RYTHM", "");
+    
+    XML->pushTag("EDGE-DIST");
+    videoEdgesVert = to_string(XML->getValue("VERTICAL", 0));
+    videoEdgesHor = to_string(XML->getValue("HORIZONTAL", 0));
+    videoEdgesDia45 = to_string(XML->getValue("DIA-45", 0));
+    videoEdgesDia135 = to_string(XML->getValue("DIA-135", 0));
+    XML->popTag();
+    
+    XML->popTag();
+    XML->popTag();
 }
 
