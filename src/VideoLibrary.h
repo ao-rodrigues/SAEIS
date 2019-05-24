@@ -24,7 +24,7 @@ class VideoLibrary {
     
     const string haarCascadeXmlPath = "haar_cascades/haarcascade_frontalface_default.xml";
     
-    const string PROCESSING_VIDEOS_MSG = "Processing videos...";
+    const string PROCESSING_VIDEOS_MSG = "Processing video ";
     const string VIDEOS_PROCESSED_MSG = "Video processing done!";
     
     const string LOW_RYTHM = "LOW";
@@ -69,7 +69,6 @@ public:
     void update();
     void draw();
     void key_pressed(int key);
-    string extractVideoName(string path);
     
 protected:
     void processVideos();

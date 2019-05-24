@@ -35,6 +35,7 @@
 		BAE475C92279D4B600F9EFAC /* Thumbnail.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475C82279D4B600F9EFAC /* Thumbnail.cpp */; };
 		BAE475CB227A15CF00F9EFAC /* VideoBrowser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE475CA227A15CE00F9EFAC /* VideoBrowser.cpp */; };
 		BAE47605227A2BF900F9EFAC /* TextToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE47604227A2BF900F9EFAC /* TextToggle.cpp */; };
+		BAFA164722971AE70048FAA1 /* helper_functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAFA164622971AE70048FAA1 /* helper_functions.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -449,6 +450,8 @@
 		BAE475CA227A15CE00F9EFAC /* VideoBrowser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoBrowser.cpp; sourceTree = "<group>"; };
 		BAE47603227A2AC600F9EFAC /* TextToggle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextToggle.h; sourceTree = "<group>"; };
 		BAE47604227A2BF900F9EFAC /* TextToggle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TextToggle.cpp; sourceTree = "<group>"; };
+		BAFA164622971AE70048FAA1 /* helper_functions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = helper_functions.cpp; sourceTree = "<group>"; };
+		BAFA164822971DC10048FAA1 /* helper_functions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = helper_functions.h; sourceTree = "<group>"; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
 		E42962AE2163EDD300A6A9E2 /* ofNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofNode.h; path = ../../../../../of_v0.10.1_osx_release/libs/openFrameworks/3d/ofNode.h; sourceTree = SOURCE_ROOT; };
@@ -1810,6 +1813,8 @@
 				BAE475C82279D4B600F9EFAC /* Thumbnail.cpp */,
 				BAE47603227A2AC600F9EFAC /* TextToggle.h */,
 				BAE47604227A2BF900F9EFAC /* TextToggle.cpp */,
+				BAFA164622971AE70048FAA1 /* helper_functions.cpp */,
+				BAFA164822971DC10048FAA1 /* helper_functions.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1919,6 +1924,7 @@
 				BAD68EB7228326EA00728265 /* ofxColorPicker.cpp in Sources */,
 				BAD68EBC228326EA00728265 /* ofxInputField.cpp in Sources */,
 				BAE475BC2277C85B00F9EFAC /* ofApp.cpp in Sources */,
+				BAFA164722971AE70048FAA1 /* helper_functions.cpp in Sources */,
 				BAD68ECC228357D400728265 /* ofxXmlSettings.cpp in Sources */,
 				BAE475CB227A15CF00F9EFAC /* VideoBrowser.cpp in Sources */,
 				BAE475C22277C8EA00F9EFAC /* VideoLibrary.cpp in Sources */,

@@ -4,6 +4,8 @@
 #include "Thumbnail.h"
 #include "TextToggle.h"
 #include "Player.h"
+#include "ofxGui.h"
+#include "ofxXmlSettings.h"
 
 #define SPACING_X 10
 #define SPACING_Y 10
@@ -12,13 +14,24 @@
 
 using namespace std;
 class VideoBrowser{
+    const string KEYWORDS_LIST_START = "Keywords: ";
+    const string KEYWORDS_INPUT_PROMPT = "Add keywords";
+    
+    string keywordsList;
+    string selectedVideoName;
+    string metadataFile;
+    
     float xPos, yPos;
+    float tagsXPos, tagsYPos;
     float width, height;
     float videoW, videoH;
 
     int maxElementsPerRow;
     int maxRows;
     int currentPage;
+    
+    bool displayKeywords;
+    bool videoSelected;
     
     vector<vector<shared_ptr<Thumbnail> > > thumbnailsByPage;
     
@@ -27,15 +40,27 @@ class VideoBrowser{
     
     vector<unique_ptr<TextToggle> > pageNumbers;
     
+    ofxInputField<string> addKeywordInput;
+    
+    ofxXmlSettings XML;
+    
 public:
     VideoBrowser(float x, float y, float w, float h, float elementW, float elementH, vector<string> videoPaths, shared_ptr<Player> player);
+    
     void draw();
+    
     void onPageNumClick(string & txt);
-    void onVideoClicked(const int & thumbnailId);
     
     void updatePreviewFrames(string vidPath, vector<ofTexture> frames);
     
     void update();
     
     void setThumbnailEnabled(string path, bool isEnabled);
+    
+    void setupKeywordsDisplay(float x, float y, string metadataFile);
+    
+protected:
+    void drawKeywordsDisplay();
+    void onThumbnailSelected(string & videoName);
+    void onKeywordsInputSubmit(string & input);
 };

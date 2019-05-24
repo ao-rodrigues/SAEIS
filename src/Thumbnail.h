@@ -32,8 +32,11 @@ class Thumbnail{
     
     vector<ofTexture> previewFrames;
     
-public:    
+public:
     Thumbnail(float x, float y, float w, float h, string vidPath, shared_ptr<Player> plyr);
+    
+    ofEvent<string> thumbnailSelected;
+    
     void draw();
     void update();
     
@@ -55,7 +58,6 @@ public:
     bool inside(float x, float y);
     void setSelected(bool isSelected);
     void setEnabled(bool isEnabled);
-    string extractVideoName(string path);
     
     void addKeyword(const string kw);
     void addKeywords(vector<string> kwds);

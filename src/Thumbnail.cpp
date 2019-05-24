@@ -1,4 +1,5 @@
 #include "Thumbnail.h"
+#include "helper_functions.h"
 
 const string Thumbnail::THUMBNAILS_PATH = "thumbnails/thumbnail_";
 
@@ -8,7 +9,7 @@ Thumbnail::Thumbnail(float x, float y, float w, float h, string vidPath, shared_
     
     hasPreviewFrames = false;
     
-    videoName = extractVideoName(videoPath);
+    videoName = helper_functions::extractVideoName(videoPath);
     enabled = false;
     
     clickListener = ofEvents().mouseReleased.newListener(this, &Thumbnail::onMouseReleased);
@@ -101,6 +102,7 @@ void Thumbnail::onMouseReleased(ofMouseEventArgs &args) {
         player->load(videoPath);
         player->play();
         
+        ofNotifyEvent(thumbnailSelected, videoName, this);
     } else {
         selected = false;
     }
@@ -117,14 +119,6 @@ void Thumbnail::setSelected(bool isSelected) {
 
 void Thumbnail::setEnabled(bool isEnabled) {
     enabled = isEnabled;
-}
-
-
-string Thumbnail::extractVideoName(string path) {
-    string baseFilename = path.substr(path.find_last_of("/\\") + 1);
-    std::size_t extStart = baseFilename.find_last_of(".");
-    
-    return baseFilename.substr(0, extStart);
 }
 
 void Thumbnail::calcFixedDimensions(ofTexture frame, float & fixedXPos, float & fixedYPos, float & fixedW, float & fixedH) {

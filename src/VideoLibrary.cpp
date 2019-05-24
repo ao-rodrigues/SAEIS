@@ -1,6 +1,7 @@
 #include "VideoLibrary.h"
 #include "ofApp.h"
 #include <opencv2/imgproc/imgproc.hpp>
+#include "helper_functions.h"
 
 VideoLibrary::VideoLibrary() {
     ofBackground(ofColor::white);
@@ -53,7 +54,7 @@ VideoLibrary::VideoLibrary() {
         videoNames.reserve(dir.size());
         for (size_t i = 0; i < dir.size(); i++) {
             string path = dir.getPath(i);
-            string name = extractVideoName(path);
+            string name = helper_functions::extractVideoName(path);
             
             videoNames.push_back(name);
             videoPaths.push_back(path);
@@ -80,6 +81,8 @@ VideoLibrary::VideoLibrary() {
             videoBrowser->updatePreviewFrames(dir.getPath(i), frames);
         }
         
+        videoBrowser->setupKeywordsDisplay(550, 610, metadataFile);
+        
     } else {
         exit(-1);
     }
@@ -95,8 +98,6 @@ bool VideoLibrary::originalIdxCompare(const DiffFrame &i, const DiffFrame &j) {
 
 void VideoLibrary::update() {
     if(!videosProcessed){
-        statusMsg = PROCESSING_VIDEOS_MSG;
-        
         if(!hiddenPlayer.isLoaded()){
             hiddenPlayer.load(dir.getPath(lastProcessedIdx + 1));
             hiddenPlayer.play();
@@ -112,6 +113,8 @@ void VideoLibrary::update() {
             XML.popTag();
             XML.saveFile(metadataFile);
         }
+        
+        statusMsg = PROCESSING_VIDEOS_MSG + to_string(lastProcessedIdx + 2) + "/" + to_string(videoNames.size());
         
         hiddenPlayer.update();
         if(hiddenPlayer.isFrameNew() && (frameStepCounter % frameStep) == 0){
@@ -266,13 +269,6 @@ void VideoLibrary::key_pressed(int key) {
     if (dir.size() > 0) {
         player->keyPress(key);
     }
-}
-
-string VideoLibrary::extractVideoName(string path) {
-    string baseFilename = path.substr(path.find_last_of("/\\") + 1);
-    std::size_t extStart = baseFilename.find_last_of(".");
-    
-    return baseFilename.substr(0, extStart);
 }
 
 void VideoLibrary::processEdgeDistribution(ofxCvColorImage colorImg) {
@@ -439,29 +435,9 @@ int VideoLibrary::compareHistograms(vector<int> first, vector<int> second) {
     return absDiff;
 }
 
-void split(const string & str, char c, set<string> & v) {
-    string::size_type i = 0;
-    string::size_type j = str.find(c);
-    
-    if(j == string::npos) {
-        v.insert(str);
-        return;
-    }
-    
-    while(j != string::npos) {
-        v.insert(str.substr(i, j - 1));
-        i = ++j;
-        j = str.find(c, j);
-        
-        if(j == string::npos) {
-            v.insert(str.substr(i, str.length()));
-        }
-    }
-}
-
 void VideoLibrary::tagSearchInputSubmit(string & input) {
     set<string> tags;
-    split(input, ',', tags);
+    helper_functions::split(input, ',', tags);
     
     XML.pushTag(metadataTag);
     for(int i = 0; i < videoNames.size(); i++) {
