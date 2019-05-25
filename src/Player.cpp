@@ -54,14 +54,6 @@ void Player::keyPress(int key) {
             player.setPaused(player.isPlaying());
             break;
             
-        case OF_KEY_RIGHT:
-            player.setFrame(player.getCurrentFrame() + fps * 5.0f);
-            break;
-            
-        case OF_KEY_LEFT:
-            player.setFrame(player.getCurrentFrame() - fps * 5.0f);
-            break;
-            
         default:
             break;
     }

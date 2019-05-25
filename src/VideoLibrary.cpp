@@ -7,7 +7,7 @@ VideoLibrary::VideoLibrary() {
     ofBackground(ofColor::white);
     ofSetVerticalSync(true);
     
-    if(XML.loadFile(metadataFile)) {
+    if(XML.loadFile(METADATA_FILE)) {
         statusMsg = "metadata.xml loaded!";
     } else {
         statusMsg = "Unable to load metadata.xml. Check data/ folder.";
@@ -16,18 +16,18 @@ VideoLibrary::VideoLibrary() {
     cout << statusMsg;
     
     // List directory paths & remove all that do not conform to the extension
-    dir.listDir(dir_path);
+    dir.listDir(DIR_PATH);
     dir.allowExt("mov");
     dir.allowExt("mp4");
     dir.sortByDate();
     
-    if(!XML.tagExists(lastProcessedTag)) {
-        XML.addValue(lastProcessedTag, -1);
-        XML.saveFile(metadataFile);
+    if(!XML.tagExists(LAST_PROCESSED_TAG)) {
+        XML.addValue(LAST_PROCESSED_TAG, -1);
+        XML.saveFile(METADATA_FILE);
     }
     
     if (dir.size() > 0) {
-        lastProcessedIdx = XML.getValue(lastProcessedTag, -1);
+        lastProcessedIdx = XML.getValue(LAST_PROCESSED_TAG, -1);
         
         if(lastProcessedIdx == dir.size() - 1) {
             videosProcessed = true;
@@ -74,7 +74,7 @@ VideoLibrary::VideoLibrary() {
             frames.resize(NUM_PREVIEW_FRAMES);
             
             for(int j = 0; j < NUM_PREVIEW_FRAMES; j++){
-                string framePath = previewFramesPath + vidName + "/" + to_string(j) + ".jpg";
+                string framePath = PREVIEW_FRAMES_PATH + vidName + "/" + to_string(j) + ".jpg";
                 ofLoadImage(frames[j], framePath);
             }
             
@@ -104,14 +104,14 @@ void VideoLibrary::update() {
             hiddenPlayer.setVolume(0.0);
             hiddenPlayer.setLoopState(OF_LOOP_NONE);
             
-            XML.pushTag(metadataTag);
+            XML.pushTag(METADATA_TAG);
             XML.addTag(videoNames[lastProcessedIdx + 1]);
             XML.pushTag(videoNames[lastProcessedIdx + 1]);
             XML.addTag("KEYWORDS");
             
             XML.popTag();
             XML.popTag();
-            XML.saveFile(metadataFile);
+            XML.saveFile(METADATA_FILE);
         }
         
         statusMsg = PROCESSING_VIDEOS_MSG + to_string(lastProcessedIdx + 2) + "/" + to_string(videoNames.size());
@@ -167,7 +167,7 @@ void VideoLibrary::update() {
             }
             
             // Save values in XML
-            XML.pushTag(metadataTag);
+            XML.pushTag(METADATA_TAG);
             XML.pushTag(videoNames[lastProcessedIdx + 1]);
             
             XML.addValue("LUMINANCE", finalLuminance);
@@ -184,7 +184,7 @@ void VideoLibrary::update() {
             
             XML.popTag();
             
-            XML.saveFile(metadataFile);
+            XML.saveFile(METADATA_FILE);
             
             XML.popTag();
             XML.popTag();
@@ -210,7 +210,7 @@ void VideoLibrary::update() {
                 tex.readToPixels(texPixels);
                 
                 string vidName = videoNames[lastProcessedIdx + 1];
-                string saveToPath = previewFramesPath + vidName + "/" + to_string(i) + ".jpg";
+                string saveToPath = PREVIEW_FRAMES_PATH + vidName + "/" + to_string(i) + ".jpg";
                 
                 // Save image for fast access after video is processed
                 ofSaveImage(texPixels, saveToPath);
@@ -239,8 +239,8 @@ void VideoLibrary::update() {
             learnSecFrame = true;
             
             lastProcessedIdx++;
-            XML.setValue(lastProcessedTag, lastProcessedIdx);
-            XML.saveFile(metadataFile);
+            XML.setValue(LAST_PROCESSED_TAG, lastProcessedIdx);
+            XML.saveFile(METADATA_FILE);
         }
         
         // Check if we processed all videos
@@ -323,7 +323,7 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
     int h = (int)pixelsFirst.getHeight();
     
     ofxCvHaarFinder finder;
-    finder.setup(haarCascadeXmlPath);
+    finder.setup(HAAR_CASCADE_XML_PATH);
     ofImage ofImageFirst;
     
     ofImageFirst.allocate(w, h, OF_IMAGE_COLOR);
@@ -398,14 +398,14 @@ void VideoLibrary::getColorFirstMoment(ofxCvColorImage frame) {
     }
      
      
-    XML.pushTag(metadataTag);
+    XML.pushTag(METADATA_TAG);
     XML.pushTag(videoNames[lastProcessedIdx + 1]);
     int tagNum = XML.addTag("COLOR");
     XML.setValue("COLOR:HUE", dominantHue, tagNum);
      
     XML.popTag();
     XML.popTag();
-    XML.saveFile(metadataFile);
+    XML.saveFile(METADATA_FILE);
     
 }
 
@@ -441,7 +441,7 @@ void VideoLibrary::tagSearchInputSubmit(string & input) {
     set<string> tags;
     helper_functions::split(input, ',', tags);
     
-    XML.pushTag(metadataTag);
+    XML.pushTag(METADATA_TAG);
     for(int i = 0; i < videoNames.size(); i++) {
         if(emptyInput) {
             videoBrowser->setThumbnailVisible(dir.getPath(i), true);

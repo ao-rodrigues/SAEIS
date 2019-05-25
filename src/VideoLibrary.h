@@ -15,14 +15,12 @@ class VideoLibrary {
     };
     
     
-    const string dir_path = "videos/";
-    const string video_ext = ".mov";
-    const string metadataFile = "metadata/metadata.xml";
-    const string metadataTag = "METADATA";
-    const string lastProcessedTag = "LAST-PROCESSED";
-    const string previewFramesPath = "micons/";
-    
-    const string haarCascadeXmlPath = "haar_cascades/haarcascade_frontalface_default.xml";
+    const string DIR_PATH = "videos/";
+    const string METADATA_FILE = "metadata/metadata.xml";
+    const string METADATA_TAG = "METADATA";
+    const string LAST_PROCESSED_TAG = "LAST-PROCESSED";
+    const string PREVIEW_FRAMES_PATH = "micons/";
+    const string HAAR_CASCADE_XML_PATH = "haar_cascades/haarcascade_frontalface_default.xml";
     
     const string PROCESSING_VIDEOS_MSG = "Processing video ";
     const string VIDEOS_PROCESSED_MSG = "Video processing done!";
