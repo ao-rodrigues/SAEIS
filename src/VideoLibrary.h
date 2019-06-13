@@ -38,7 +38,7 @@ class VideoLibrary {
     const double SIGMA = 4.0;
     const double GAMMA = 0.5;
     
-    const vector<double> THETA_VALUES = {0.0, 45.0, 90.0, 135.0};
+    const vector<double> THETA_VALUES = {0.0, 22.5, 45.0, 90.0, 112.5, 135.0};
     const vector<double> LAMBDA_VALUES = {8.0, 9.0, 10.0, 11.0};
     
     int frameStepCounter;
