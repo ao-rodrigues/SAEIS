@@ -263,7 +263,9 @@ void VideoLibrary::update() {
 }
 
 void VideoLibrary::draw() {
-    contextualPlayer->draw();
+    if(videosProcessed) {
+        contextualPlayer->draw();
+    }
     
     if(!fullscreenMode) {
         tagSearchInput.draw();

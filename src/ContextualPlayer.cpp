@@ -43,7 +43,7 @@ void ContextualPlayer::draw() {
     
     if(!isFullscreen) {
         ofSetColor(ofColor::white);
-        camera.draw(ofGetWindowWidth() - CAMERA_WIDTH - 50, ofGetWindowHeight() - CAMERA_HEIGHT - 50);
+        camera.draw(ofGetWindowWidth() - camera.getWidth() - 50, ofGetWindowHeight() - camera.getHeight() - 50);
     }
     
 }
