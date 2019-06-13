@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BAA71E4922B2C7560007EBF8 /* ContextualPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAA71E4822B2C7560007EBF8 /* ContextualPlayer.cpp */; };
 		BAD68EB6228326EA00728265 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD68EA2228326E900728265 /* ofxBaseGui.cpp */; };
 		BAD68EB7228326EA00728265 /* ofxColorPicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD68EA3228326E900728265 /* ofxColorPicker.cpp */; };
 		BAD68EB8228326EA00728265 /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD68EA4228326E900728265 /* ofxSliderGroup.cpp */; };
@@ -51,6 +52,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BAA71E4722B2C62A0007EBF8 /* ContextualPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextualPlayer.h; sourceTree = "<group>"; };
+		BAA71E4822B2C7560007EBF8 /* ContextualPlayer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ContextualPlayer.cpp; sourceTree = "<group>"; };
 		BAD68EA1228326E900728265 /* ofxGuiGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGuiGroup.h; sourceTree = "<group>"; };
 		BAD68EA2228326E900728265 /* ofxBaseGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBaseGui.cpp; sourceTree = "<group>"; };
 		BAD68EA3228326E900728265 /* ofxColorPicker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxColorPicker.cpp; sourceTree = "<group>"; };
@@ -1815,6 +1818,8 @@
 				BAE47604227A2BF900F9EFAC /* TextToggle.cpp */,
 				BAFA164622971AE70048FAA1 /* helper_functions.cpp */,
 				BAFA164822971DC10048FAA1 /* helper_functions.h */,
+				BAA71E4722B2C62A0007EBF8 /* ContextualPlayer.h */,
+				BAA71E4822B2C7560007EBF8 /* ContextualPlayer.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1934,6 +1939,7 @@
 				BAD68EC9228357D400728265 /* tinyxmlparser.cpp in Sources */,
 				BAD6907B2286352000728265 /* ofxCvHaarFinder.cpp in Sources */,
 				BAD68EBE228326EA00728265 /* ofxPanel.cpp in Sources */,
+				BAA71E4922B2C7560007EBF8 /* ContextualPlayer.cpp in Sources */,
 				BAD6907E2286352000728265 /* ofxCvGrayscaleImage.cpp in Sources */,
 				BAD68EBB228326EA00728265 /* ofxGuiGroup.cpp in Sources */,
 				BAE475C92279D4B600F9EFAC /* Thumbnail.cpp in Sources */,

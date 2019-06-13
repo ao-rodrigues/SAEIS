@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "Player.h"
 #include "VideoBrowser.h"
+#include "ContextualPlayer.h"
 #include "ofxGui.h"
 #include "ofxXmlSettings.h"
 #include "ofxOpenCv.h"
@@ -14,6 +15,7 @@ class VideoLibrary {
         ofTexture tex;
     };
     
+    const string BEHAVIOURS_XML = "behaviours/behaviours_1.xml";
     
     const string DIR_PATH = "videos/";
     const string METADATA_FILE = "metadata/metadata.xml";
@@ -51,6 +53,9 @@ class VideoLibrary {
     
     shared_ptr<Player> player;
     unique_ptr<VideoBrowser> videoBrowser;
+    unique_ptr<ContextualPlayer> contextualPlayer;
+    
+    bool fullscreenMode;
     
     ofxInputField<string> tagSearchInput;
     
@@ -69,6 +74,7 @@ class VideoLibrary {
     bool learnFirstFrame, learnSecFrame;
     
     ofVideoPlayer hiddenPlayer;
+    
 
 public:
     VideoLibrary();

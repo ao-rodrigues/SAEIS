@@ -49,6 +49,8 @@ VideoLibrary::VideoLibrary() {
         learnSecFrame = true;
         frameStepCounter = 0;
         
+        fullscreenMode = false;
+        
         vector<string> videoPaths;
         videoPaths.reserve(dir.size());
         
@@ -83,6 +85,8 @@ VideoLibrary::VideoLibrary() {
         }
         
         videoBrowser->setupMetadataDisplay(550, 660, XML);
+        
+        contextualPlayer = std::make_unique<ContextualPlayer>(BEHAVIOURS_XML);
         
     } else {
         exit(-1);
@@ -255,20 +259,30 @@ void VideoLibrary::update() {
     
     
     player->update();
+    contextualPlayer->update();
 }
 
 void VideoLibrary::draw() {
-    tagSearchInput.draw();
-    videoBrowser->draw();
-    player->draw();
+    contextualPlayer->draw();
     
-    ofSetColor(ofColor::black);
-    ofDrawBitmapString(statusMsg, 270, 60);
+    if(!fullscreenMode) {
+        tagSearchInput.draw();
+        videoBrowser->draw();
+        player->draw();
+        
+        ofSetColor(ofColor::black);
+        ofDrawBitmapString(statusMsg, 270, 60);
+    }
 }
 
 void VideoLibrary::key_pressed(int key) {
     if (dir.size() > 0) {
         player->keyPress(key);
+    }
+    
+    if((char)key == 'f') {
+        fullscreenMode = !fullscreenMode;
+        contextualPlayer->setFullscreen(fullscreenMode);
     }
 }
 
