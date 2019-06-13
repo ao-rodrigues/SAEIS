@@ -1,6 +1,7 @@
 #include "VideoLibrary.h"
 #include "ofApp.h"
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/features2d.hpp>
 #include "helper_functions.h"
 
 VideoLibrary::VideoLibrary() {
@@ -35,7 +36,7 @@ VideoLibrary::VideoLibrary() {
             videosProcessed = false;
         }
         
-        colorProcessed = false;
+        firstMomentProcessing = false;
         
         sumAvgLuminances = 0.0f;
         sumNumFaces = 0;
@@ -226,7 +227,7 @@ void VideoLibrary::update() {
             frameStepCounter = 0;
             hiddenPlayer.closeMovie();
             
-            colorProcessed = false;
+            firstMomentProcessing = false;
             
             sumAvgLuminances = 0.0f;
             sumNumFaces = 0;
@@ -298,9 +299,11 @@ void VideoLibrary::processEdgeDistribution(ofxCvColorImage colorImg) {
 }
 
 void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) {
-    if(!colorProcessed) {
+    if(!firstMomentProcessing) {
         getColorFirstMoment(first);
-        colorProcessed = true;
+        processTexture(first);
+        //featureExtraction(first);
+        firstMomentProcessing = true;
     }
     
     ofxCvGrayscaleImage grayFirst;
@@ -366,6 +369,52 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
     
     processEdgeDistribution(first);
     
+}
+
+void VideoLibrary::featureExtraction(ofxCvColorImage colorImg) {
+    cv::Mat colorMat = cv::cvarrToMat(colorImg.getCvImage());
+    cv::Mat greyImg;
+    
+    cv::cvtColor(colorMat, greyImg, CV_BGR2GRAY);
+    
+    
+}
+
+void VideoLibrary::processTexture(ofxCvColorImage colorImg) {
+    cv::Mat colorMat = cv::cvarrToMat(colorImg.getCvImage());
+    cv::Mat greyMat;
+    cv::cvtColor(colorMat, greyMat, CV_BGR2GRAY);
+    
+    XML.pushTag(METADATA_TAG);
+    XML.pushTag(videoNames[lastProcessedIdx + 1]);
+    int tagNum = XML.addTag("TEXTURE");
+    
+    for(int i = 0; i < THETA_VALUES.size(); i++) {
+        for(int j = 0; j < LAMBDA_VALUES.size(); j++) {
+            cv::Mat kernel = cv::getGaborKernel(cv::Size(K_SIZE, K_SIZE), SIGMA, THETA_VALUES[i], LAMBDA_VALUES[j], GAMMA);
+            cv::Mat imgTexture;
+            
+            // Apply kernel to image
+            cv::filter2D(greyMat, imgTexture, -1, kernel);
+            
+            cv::Scalar mean, stdDev;
+            
+            // Calculate mean and std dev (variance is (std dev) ^ 2 )
+            cv::meanStdDev(imgTexture, mean, stdDev);
+            
+            double variance = pow(stdDev[0], 2.0);
+            
+            string tag = "TEXTURE:" + to_string(THETA_VALUES[i]) + "-" + to_string(LAMBDA_VALUES[j]);
+            
+            XML.setValue(tag + ":MEAN", mean[0], tagNum);
+            XML.setValue(tag + ":VARIANCE", variance, tagNum);
+            
+        }
+    }
+    
+    XML.popTag();
+    XML.popTag();
+    XML.saveFile(METADATA_FILE);
 }
 
 void VideoLibrary::getColorFirstMoment(ofxCvColorImage frame) {

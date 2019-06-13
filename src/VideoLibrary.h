@@ -17,6 +17,7 @@ class VideoLibrary {
     
     const string DIR_PATH = "videos/";
     const string METADATA_FILE = "metadata/metadata.xml";
+    const string FEATURE_MATCHING_IMG = "feature_matching/cocacola.jpg";
     const string METADATA_TAG = "METADATA";
     const string LAST_PROCESSED_TAG = "LAST-PROCESSED";
     const string PREVIEW_FRAMES_PATH = "micons/";
@@ -32,6 +33,13 @@ class VideoLibrary {
     const int NUM_PREVIEW_FRAMES = 10;
     
     const int frameStep = 5;
+    
+    const int K_SIZE = 31;
+    const double SIGMA = 4.0;
+    const double GAMMA = 0.5;
+    
+    const vector<double> THETA_VALUES = {0.0, 45.0, 90.0, 135.0};
+    const vector<double> LAMBDA_VALUES = {8.0, 9.0, 10.0, 11.0};
     
     int frameStepCounter;
     
@@ -51,7 +59,7 @@ class VideoLibrary {
     int lastProcessedIdx;
     
     bool videosProcessed;
-    bool colorProcessed;
+    bool firstMomentProcessing;
     
     float sumAvgLuminances;
     int sumNumFaces;
@@ -77,6 +85,10 @@ protected:
     int compareHistograms(vector<int> first, vector<int> second);
     
     void processEdgeDistribution(ofxCvColorImage colorImg);
+    
+    void featureExtraction(ofxCvColorImage colorImg);
+    
+    void processTexture(ofxCvColorImage colorImg);
     
     int calculateRythm();
     
