@@ -2,13 +2,13 @@
 
 ContextualPlayer::ContextualPlayer(string behavioursXml) {
     if(behavioursXML.loadFile(behavioursXml)) {
-        cout << "Behaviours XML loaded!";
+        cout << "Behaviours XML loaded!\n";
     } else {
-        cout << "Behaviours XML not loaded!";
+        cout << "Behaviours XML not loaded!\n";
     }
     
     camera.setDeviceID(0);
-    camera.setDesiredFrameRate(60);
+    camera.setDesiredFrameRate(30);
     camera.initGrabber(CAMERA_WIDTH, CAMERA_HEIGHT);
     
     player.setLoopState(OF_LOOP_NORMAL);
@@ -20,12 +20,18 @@ ContextualPlayer::ContextualPlayer(string behavioursXml) {
     videoAreaWidth = PLAYER_WIDTH;
     videoAreaHeight = PLAYER_HEIGHT;
     
+    videoStart = ofGetElapsedTimeMillis();
+    
     
     ofSetVerticalSync(true);
 }
 
 void ContextualPlayer::update() {
     camera.update();
+    
+    if(camera.isFrameNew()) {
+        processFrame(camera.getPixels());
+    }
 }
 
 void ContextualPlayer::draw() {
@@ -75,6 +81,9 @@ void ContextualPlayer::loadVideo(const string path) {
     
     player.load(path);
     calculatePlayerDimensions();
+    
+    player.play();
+    videoStart = ofGetElapsedTimeMillis();
 
 }
 
@@ -100,5 +109,16 @@ void ContextualPlayer::calculatePlayerDimensions() {
             videoXPos = videoAreaXPos + ((videoAreaWidth - videoWidth) / 2.0);
             videoYPos = videoAreaYPos;
         }
+    }
+}
+
+void ContextualPlayer::processFrame(ofPixels &pixels) {
+    uint64_t currTime = ofGetElapsedTimeMillis();
+    
+    if(currTime - videoStart > VIDEO_PLAY_TIME_MILLIS) {
+        // The video has played for 5 seconds, we can process the camera again
+        vector<string> events;
+        
+        
     }
 }

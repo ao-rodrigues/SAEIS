@@ -17,9 +17,13 @@ class VideoLibrary {
     
     const string BEHAVIOURS_XML = "behaviours/behaviours_1.xml";
     
+    const string IMG_REF = "feature_matching/cocacola.jpg";
+    const string MATCHER = "BruteForce-Hamming";
+    const float GOOD_MATCH_PERCENT = 0.15f;
+    
     const string DIR_PATH = "videos/";
     const string METADATA_FILE = "metadata/metadata.xml";
-    const string FEATURE_MATCHING_IMG = "feature_matching/cocacola.jpg";
+    
     const string METADATA_TAG = "METADATA";
     const string LAST_PROCESSED_TAG = "LAST-PROCESSED";
     const string PREVIEW_FRAMES_PATH = "micons/";

@@ -9,9 +9,9 @@ VideoLibrary::VideoLibrary() {
     ofSetVerticalSync(true);
     
     if(XML.loadFile(METADATA_FILE)) {
-        statusMsg = "metadata.xml loaded!";
+        statusMsg = "metadata.xml loaded!\n";
     } else {
-        statusMsg = "Unable to load metadata.xml. Check data/ folder.";
+        statusMsg = "Unable to load metadata.xml. Check data/ folder.\n";
     }
     
     cout << statusMsg;
@@ -318,7 +318,7 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
     if(!firstMomentProcessing) {
         getColorFirstMoment(first);
         processTexture(first);
-        //featureExtraction(first);
+        featureExtraction(first);
         firstMomentProcessing = true;
     }
     
@@ -389,11 +389,59 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
 
 void VideoLibrary::featureExtraction(ofxCvColorImage colorImg) {
     cv::Mat colorMat = cv::cvarrToMat(colorImg.getCvImage());
-    cv::Mat greyImg;
+    cv::Mat grayImg;
     
-    cv::cvtColor(colorMat, greyImg, CV_BGR2GRAY);
+    cv::cvtColor(colorMat, grayImg, CV_BGR2GRAY);
     
+    ofImage ofImgRef;
+    ofImgRef.load(IMG_REF);
     
+    ofxCvColorImage ofxCvImgRef;
+    ofxCvImgRef.setFromPixels(ofImgRef.getPixels());
+    
+    cv::Mat imgRef = cv::cvarrToMat(ofxCvImgRef.getCvImage());
+    cv::Mat imgRefGray;
+    
+    cv::cvtColor(imgRef, imgRefGray, CV_BGR2GRAY);
+    
+    vector<cv::KeyPoint> keypoints1, keypoints2;
+    cv::Mat descriptors1, descriptors2;
+    
+    cv::Ptr<cv::Feature2D> orb = cv::ORB::create(500);
+    
+    orb->detectAndCompute(grayImg, cv::Mat(), keypoints1, descriptors1);
+    orb->detectAndCompute(imgRefGray, cv::Mat(), keypoints2, descriptors2);
+    
+    vector<cv::DMatch> matches;
+    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(MATCHER);
+    
+    matcher->match(descriptors1, descriptors2, matches, cv::Mat());
+    
+    // Sort matches by score
+    std::sort(matches.begin(), matches.end());
+    
+    // Calculate number of good matches
+    const int numGoodMatches = matches.size() * GOOD_MATCH_PERCENT;
+    
+    // Remove "bad" matches
+    matches.erase(matches.begin() + numGoodMatches, matches.end());
+    
+    XML.pushTag(METADATA_TAG);
+    XML.pushTag(videoNames[lastProcessedIdx + 1]);
+    XML.addTag("FEATURE-MATCHING");
+    XML.pushTag("FEATURE-MATCHING");
+    
+    XML.addTag("COCA-COLA");
+    XML.pushTag("COCA-COLA");
+    
+    for(int i = 0; i < matches.size(); i++) {
+        // Write to XML
+        XML.setValue("DIST", matches[i].distance, i);
+    }
+    
+    XML.popTag();
+    XML.popTag();
+    XML.saveFile(METADATA_FILE);
 }
 
 void VideoLibrary::processTexture(ofxCvColorImage colorImg) {
@@ -420,7 +468,7 @@ void VideoLibrary::processTexture(ofxCvColorImage colorImg) {
             
             double variance = pow(stdDev[0], 2.0);
             
-            string tag = "TEXTURE:" + to_string(THETA_VALUES[i]) + "-" + to_string(LAMBDA_VALUES[j]);
+            string tag = "TEXTURE:T" + to_string(THETA_VALUES[i]) + "-T" + to_string(LAMBDA_VALUES[j]);
             
             XML.setValue(tag + ":MEAN", mean[0], tagNum);
             XML.setValue(tag + ":VARIANCE", variance, tagNum);
