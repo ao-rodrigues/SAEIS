@@ -1,4 +1,6 @@
 #include "ContextualPlayer.h"
+#include "ObjectDetection.h"
+#include <opencv2/imgproc/imgproc.hpp>
 
 ContextualPlayer::ContextualPlayer(string behavioursXml) {
     if(behavioursXML.loadFile(behavioursXml)) {
@@ -15,6 +17,8 @@ ContextualPlayer::ContextualPlayer(string behavioursXml) {
     
     player.setLoopState(OF_LOOP_NORMAL);
     isFullscreen = false;
+    objDetected = false;
+    objCoords = vector<cv::Point2f>(4);
     
     videoAreaXPos = ofGetWindowWidth() - PLAYER_WIDTH - 50;
     videoAreaYPos = 50;
@@ -28,17 +32,19 @@ ContextualPlayer::ContextualPlayer(string behavioursXml) {
 }
 
 void ContextualPlayer::update() {
+    camX = ofGetWindowWidth() - camera.getWidth() - 50;
+    camY = ofGetWindowHeight() - camera.getHeight() - 50;
+    
     camera.update();
     
     if(camera.isFrameNew()) {
         processFrame(camera.getPixels());
     }
+    
+    player.update();
 }
 
 void ContextualPlayer::draw() {
-    int camX = ofGetWindowWidth() - camera.getWidth() - 50;
-    int camY = ofGetWindowHeight() - camera.getHeight() - 50;
-    
     if(!player.isLoaded()) {
         ofSetColor(ofColor::gray);
         ofDrawRectangle(videoAreaXPos, videoAreaYPos, videoAreaWidth, videoAreaHeight);
@@ -65,6 +71,19 @@ void ContextualPlayer::draw() {
     }
     
     ofFill();
+    
+    if(objDetected) {
+        ofNoFill();
+        
+        ofSetColor(ofColor::blue);
+
+        ofDrawLine(objCoords[0].x, objCoords[0].y, objCoords[1].x, objCoords[1].y);
+        ofDrawLine(objCoords[1].x, objCoords[1].y, objCoords[2].x, objCoords[2].y);
+        ofDrawLine(objCoords[2].x, objCoords[2].y, objCoords[3].x, objCoords[3].y);
+        ofDrawLine(objCoords[3].x, objCoords[3].y, objCoords[0].x, objCoords[0].y);
+        
+        ofFill();
+    }
     
 }
 
@@ -127,14 +146,61 @@ void ContextualPlayer::calculatePlayerDimensions() {
 }
 
 void ContextualPlayer::processFrame(ofPixels &pixels) {
+    
+    //if(!objDetected) {
+        detectObject(pixels);
+    //}
     faceFinder.findHaarObjects(pixels);
     
     uint64_t currTime = ofGetElapsedTimeMillis();
     
     if(currTime - videoStart > VIDEO_PLAY_TIME_MILLIS) {
         // The video has played for 5 seconds, we can process the camera again
-        vector<string> events;
-        
-        
+        videoStart = ofGetElapsedTimeMillis();
+        objDetected = false;
     }
+}
+
+void ContextualPlayer::detectObject(ofPixels &scenePixels) {
+    ofxCvColorImage ofSceneColor;
+    ofSceneColor.allocate((int)scenePixels.getWidth(), (int)scenePixels.getHeight());
+    ofSceneColor.setFromPixels(scenePixels);
+    cv::Mat sceneMat = cv::cvarrToMat(ofSceneColor.getCvImage());
+    
+    ofImage ofImgRef;
+    ofImgRef.load(IMG_REF);
+    
+    ofxCvColorImage ofxCvImgRef;
+    ofxCvImgRef.allocate((int)ofImgRef.getWidth(), (int)ofImgRef.getHeight());
+    
+    ofxCvImgRef.setFromPixels(ofImgRef.getPixels());
+    
+    cv::Mat imgRef = cv::cvarrToMat(ofxCvImgRef.getCvImage());
+    cv::Mat objMat;
+    cv::cvtColor(imgRef, objMat, CV_BGR2GRAY);
+    
+    // This function returns either a vector with the 4 corners of the object in the image, or nothing if no object is found
+    vector<cv::Point2f> objCorners = ObjectDetection::findObjectInScene(objMat, sceneMat);
+    
+    if(!objCorners.empty()) {
+        setupObjectRect(objCorners);
+        
+        uint64_t currTime = ofGetElapsedTimeMillis();
+        if(currTime - videoStart > VIDEO_PLAY_TIME_MILLIS) {
+            // The video has played for 5 seconds, we can process the camera again
+            string vidPath = behavioursXML.getValue("BEHAVIOURS:COCA-COLA:VIDEO", "");
+            loadVideo(vidPath);
+            videoStart = ofGetElapsedTimeMillis();
+        }
+    }
+}
+
+void ContextualPlayer::setupObjectRect(vector<cv::Point2f> objCorners) {
+    cv::Point2f camCoords ((float)camX, (float)camY);
+    
+    for(int i = 0; i < objCorners.size(); i++) {
+        objCoords[i] = objCorners[i] + camCoords;
+    }
+    
+    objDetected = true;
 }

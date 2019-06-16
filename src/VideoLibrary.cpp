@@ -410,7 +410,7 @@ void VideoLibrary::featureExtraction(ofxCvColorImage colorImg) {
     
     vector<cv::DMatch> goodMatches = ObjectDetection::computeMatches(refObj, scene);
     
-    if(goodMatches.size() >= MIN_MATCH_COUNT) {
+    if(!goodMatches.empty()) {
         objMatchCount++;
     }
     

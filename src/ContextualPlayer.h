@@ -9,6 +9,8 @@
 #include "ofxOpenCv.h"
 
 class ContextualPlayer {
+    const string IMG_REF = "feature_matching/cocacola.jpg";
+    
     const string HAAR_CASCADE = "haar_cascades/haarcascade_frontalface_default.xml";
     
     const string EVT_NUM_FACES = "NUM-FACES";
@@ -18,8 +20,8 @@ class ContextualPlayer {
     const int PLAYER_WIDTH = 480;
     const int PLAYER_HEIGHT = 270;
     
-    const int CAMERA_WIDTH = 480;
-    const int CAMERA_HEIGHT = 270;
+    const int CAMERA_WIDTH = 640;
+    const int CAMERA_HEIGHT = 480;
     
     const uint64_t VIDEO_PLAY_TIME_MILLIS = 5000;
     
@@ -36,9 +38,14 @@ class ContextualPlayer {
     float videoXPos, videoYPos;
     float videoWidth, videoHeight;
     
+    int camX, camY;
+    
     uint64_t videoStart;
     
     bool isFullscreen;
+    
+    bool objDetected;
+    vector<cv::Point2f> objCoords;
     
 public:
     ContextualPlayer(string behavioursXml);
@@ -54,4 +61,6 @@ private:
     
     void processFrame(ofPixels &pixels);
     
+    void detectObject(ofPixels &scenePixels);
+    void setupObjectRect(vector<cv::Point2f> objCorners);
 };
