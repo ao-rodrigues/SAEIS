@@ -1,8 +1,7 @@
 #include "VideoLibrary.h"
 #include "ofApp.h"
 #include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/features2d.hpp>
-#include <opencv2/calib3d.hpp>
+#include "ObjectDetection.h"
 #include "helper_functions.h"
 
 VideoLibrary::VideoLibrary() {
@@ -409,39 +408,10 @@ void VideoLibrary::featureExtraction(ofxCvColorImage colorImg) {
     
     cv::cvtColor(imgRef, refObj, CV_BGR2GRAY);
     
-    vector<cv::KeyPoint> keypointsObj, keypointsScene;
-    cv::Mat descriptorsObj, descriptorsScene;
+    vector<cv::DMatch> goodMatches = ObjectDetection::computeMatches(refObj, scene);
     
-    cv::Ptr<cv::Feature2D> detector = cv::ORB::create(500);
-    
-    detector->detectAndCompute(refObj, cv::noArray(), keypointsObj, descriptorsObj);
-    detector->detectAndCompute(scene, cv::noArray(), keypointsScene, descriptorsScene);
-    
-    // Check if there are any descriptors/ keypoints before proceeding
-    if(!(descriptorsObj.empty() || descriptorsScene.empty() || keypointsObj.empty() || keypointsScene.empty())) {
-        
-        //cv::FlannBasedMatcher matcher = cv::FlannBasedMatcher(cv::makePtr<cv::flann::LshIndexParams>(6, 12, 1));
-        cv::BFMatcher matcher(cv::NORM_L2);
-        
-        vector<vector<cv::DMatch> > knnMatches;
-        matcher.knnMatch(descriptorsObj, descriptorsScene, knnMatches, 2);
-        
-        vector<cv::DMatch> goodMatches;
-        
-        // Filter matches according to Lowe's ratio test
-        for(int i = 0; i < knnMatches.size(); i++) {
-            
-            // Safety measure because not all matches have a correspondence using ORB and FLANN
-            if(knnMatches[i].size() >= 2) {
-                if(knnMatches[i][0].distance < MATCH_RATIO_THRESH * knnMatches[i][1].distance) {
-                    goodMatches.push_back(knnMatches[i][0]);
-                }
-            }
-        }
-        
-        if(goodMatches.size() >= MIN_MATCH_COUNT) {
-            objMatchCount++;
-        }
+    if(goodMatches.size() >= MIN_MATCH_COUNT) {
+        objMatchCount++;
     }
     
     /*

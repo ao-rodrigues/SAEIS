@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BAA71E4922B2C7560007EBF8 /* ContextualPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAA71E4822B2C7560007EBF8 /* ContextualPlayer.cpp */; };
+		BAA71E4C22B692FE0007EBF8 /* ObjectDetection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAA71E4B22B692FE0007EBF8 /* ObjectDetection.cpp */; };
 		BAD68EB6228326EA00728265 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD68EA2228326E900728265 /* ofxBaseGui.cpp */; };
 		BAD68EB7228326EA00728265 /* ofxColorPicker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD68EA3228326E900728265 /* ofxColorPicker.cpp */; };
 		BAD68EB8228326EA00728265 /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD68EA4228326E900728265 /* ofxSliderGroup.cpp */; };
@@ -54,6 +55,8 @@
 /* Begin PBXFileReference section */
 		BAA71E4722B2C62A0007EBF8 /* ContextualPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContextualPlayer.h; sourceTree = "<group>"; };
 		BAA71E4822B2C7560007EBF8 /* ContextualPlayer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ContextualPlayer.cpp; sourceTree = "<group>"; };
+		BAA71E4A22B6922D0007EBF8 /* ObjectDetection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectDetection.h; sourceTree = "<group>"; };
+		BAA71E4B22B692FE0007EBF8 /* ObjectDetection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectDetection.cpp; sourceTree = "<group>"; };
 		BAD68EA1228326E900728265 /* ofxGuiGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGuiGroup.h; sourceTree = "<group>"; };
 		BAD68EA2228326E900728265 /* ofxBaseGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBaseGui.cpp; sourceTree = "<group>"; };
 		BAD68EA3228326E900728265 /* ofxColorPicker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxColorPicker.cpp; sourceTree = "<group>"; };
@@ -1820,6 +1823,8 @@
 				BAFA164822971DC10048FAA1 /* helper_functions.h */,
 				BAA71E4722B2C62A0007EBF8 /* ContextualPlayer.h */,
 				BAA71E4822B2C7560007EBF8 /* ContextualPlayer.cpp */,
+				BAA71E4A22B6922D0007EBF8 /* ObjectDetection.h */,
+				BAA71E4B22B692FE0007EBF8 /* ObjectDetection.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1929,6 +1934,7 @@
 				BAD68EB7228326EA00728265 /* ofxColorPicker.cpp in Sources */,
 				BAD68EBC228326EA00728265 /* ofxInputField.cpp in Sources */,
 				BAE475BC2277C85B00F9EFAC /* ofApp.cpp in Sources */,
+				BAA71E4C22B692FE0007EBF8 /* ObjectDetection.cpp in Sources */,
 				BAFA164722971AE70048FAA1 /* helper_functions.cpp in Sources */,
 				BAD68ECC228357D400728265 /* ofxXmlSettings.cpp in Sources */,
 				BAE475CB227A15CF00F9EFAC /* VideoBrowser.cpp in Sources */,
