@@ -7,6 +7,8 @@ ContextualPlayer::ContextualPlayer(string behavioursXml) {
         cout << "Behaviours XML not loaded!\n";
     }
     
+    ofSetVerticalSync(true);
+    
     camera.setDeviceID(0);
     camera.setDesiredFrameRate(30);
     camera.initGrabber(CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -22,8 +24,7 @@ ContextualPlayer::ContextualPlayer(string behavioursXml) {
     
     videoStart = ofGetElapsedTimeMillis();
     
-    
-    ofSetVerticalSync(true);
+    faceFinder.setup(HAAR_CASCADE);
 }
 
 void ContextualPlayer::update() {
@@ -35,6 +36,9 @@ void ContextualPlayer::update() {
 }
 
 void ContextualPlayer::draw() {
+    int camX = ofGetWindowWidth() - camera.getWidth() - 50;
+    int camY = ofGetWindowHeight() - camera.getHeight() - 50;
+    
     if(!player.isLoaded()) {
         ofSetColor(ofColor::gray);
         ofDrawRectangle(videoAreaXPos, videoAreaYPos, videoAreaWidth, videoAreaHeight);
@@ -49,8 +53,18 @@ void ContextualPlayer::draw() {
     
     if(!isFullscreen) {
         ofSetColor(ofColor::white);
-        camera.draw(ofGetWindowWidth() - camera.getWidth() - 50, ofGetWindowHeight() - camera.getHeight() - 50);
+        camera.draw(camX, camY);
     }
+    
+    ofNoFill();
+    for(unsigned int i = 0; i < faceFinder.blobs.size(); i++) {
+        ofRectangle cur = faceFinder.blobs[i].boundingRect;
+        
+        ofSetColor(ofColor::green);
+        ofDrawRectangle(camX + cur.x, camY + cur.y, cur.width, cur.height);
+    }
+    
+    ofFill();
     
 }
 
@@ -113,6 +127,8 @@ void ContextualPlayer::calculatePlayerDimensions() {
 }
 
 void ContextualPlayer::processFrame(ofPixels &pixels) {
+    faceFinder.findHaarObjects(pixels);
+    
     uint64_t currTime = ofGetElapsedTimeMillis();
     
     if(currTime - videoStart > VIDEO_PLAY_TIME_MILLIS) {

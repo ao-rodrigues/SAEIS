@@ -18,8 +18,12 @@ class VideoLibrary {
     const string BEHAVIOURS_XML = "behaviours/behaviours_1.xml";
     
     const string IMG_REF = "feature_matching/cocacola.jpg";
-    const string MATCHER = "BruteForce-Hamming";
-    const float GOOD_MATCH_PERCENT = 0.15f;
+    const string MATCHER = "FlannBased";
+    
+    const float MATCH_RATIO_THRESH = 0.75f;
+    const int MIN_MATCH_COUNT = 10;
+    
+    const string NO_MATCH = "No match";
     
     const string DIR_PATH = "videos/";
     const string METADATA_FILE = "metadata/metadata.xml";
@@ -73,6 +77,8 @@ class VideoLibrary {
     float sumAvgLuminances;
     int sumNumFaces;
     int sumVerPixels, sumHorPixels, sumDia45Pixels, sumDia135Pixels;
+    
+    int objMatchCount;
     
     pair<ofxCvColorImage, ofxCvColorImage> framePair;
     bool learnFirstFrame, learnSecFrame;

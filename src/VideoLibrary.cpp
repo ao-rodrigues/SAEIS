@@ -2,6 +2,7 @@
 #include "ofApp.h"
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/features2d.hpp>
+#include <opencv2/calib3d.hpp>
 #include "helper_functions.h"
 
 VideoLibrary::VideoLibrary() {
@@ -44,6 +45,7 @@ VideoLibrary::VideoLibrary() {
         sumHorPixels = 0;
         sumDia45Pixels = 0;
         sumDia135Pixels = 0;
+        objMatchCount = 0;
         
         learnFirstFrame = true;
         learnSecFrame = true;
@@ -189,6 +191,9 @@ void VideoLibrary::update() {
             
             XML.popTag();
             
+            int tagNum = XML.addTag("FEATURE-MATCHING");
+            XML.setValue("FEATURE-MATCHING:COCA-COLA", objMatchCount, tagNum);
+            
             XML.saveFile(METADATA_FILE);
             
             XML.popTag();
@@ -239,6 +244,7 @@ void VideoLibrary::update() {
             sumHorPixels = 0;
             sumDia45Pixels = 0;
             sumDia135Pixels = 0;
+            objMatchCount = 0;
             
             learnFirstFrame = true;
             learnSecFrame = true;
@@ -318,7 +324,6 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
     if(!firstMomentProcessing) {
         getColorFirstMoment(first);
         processTexture(first);
-        featureExtraction(first);
         firstMomentProcessing = true;
     }
     
@@ -384,14 +389,14 @@ void VideoLibrary::processFrames(ofxCvColorImage first, ofxCvColorImage second) 
     diffs.push_back(df);
     
     processEdgeDistribution(first);
-    
+    featureExtraction(first);
 }
 
 void VideoLibrary::featureExtraction(ofxCvColorImage colorImg) {
     cv::Mat colorMat = cv::cvarrToMat(colorImg.getCvImage());
-    cv::Mat grayImg;
+    cv::Mat scene;
     
-    cv::cvtColor(colorMat, grayImg, CV_BGR2GRAY);
+    cv::cvtColor(colorMat, scene, CV_BGR2GRAY);
     
     ofImage ofImgRef;
     ofImgRef.load(IMG_REF);
@@ -400,48 +405,59 @@ void VideoLibrary::featureExtraction(ofxCvColorImage colorImg) {
     ofxCvImgRef.setFromPixels(ofImgRef.getPixels());
     
     cv::Mat imgRef = cv::cvarrToMat(ofxCvImgRef.getCvImage());
-    cv::Mat imgRefGray;
+    cv::Mat refObj;
     
-    cv::cvtColor(imgRef, imgRefGray, CV_BGR2GRAY);
+    cv::cvtColor(imgRef, refObj, CV_BGR2GRAY);
     
-    vector<cv::KeyPoint> keypoints1, keypoints2;
-    cv::Mat descriptors1, descriptors2;
+    vector<cv::KeyPoint> keypointsObj, keypointsScene;
+    cv::Mat descriptorsObj, descriptorsScene;
     
-    cv::Ptr<cv::Feature2D> orb = cv::ORB::create(500);
+    cv::Ptr<cv::Feature2D> detector = cv::ORB::create(500);
     
-    orb->detectAndCompute(grayImg, cv::Mat(), keypoints1, descriptors1);
-    orb->detectAndCompute(imgRefGray, cv::Mat(), keypoints2, descriptors2);
+    detector->detectAndCompute(refObj, cv::noArray(), keypointsObj, descriptorsObj);
+    detector->detectAndCompute(scene, cv::noArray(), keypointsScene, descriptorsScene);
     
-    vector<cv::DMatch> matches;
-    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(MATCHER);
-    
-    matcher->match(descriptors1, descriptors2, matches, cv::Mat());
-    
-    // Sort matches by score
-    std::sort(matches.begin(), matches.end());
-    
-    // Calculate number of good matches
-    const int numGoodMatches = matches.size() * GOOD_MATCH_PERCENT;
-    
-    // Remove "bad" matches
-    matches.erase(matches.begin() + numGoodMatches, matches.end());
-    
-    XML.pushTag(METADATA_TAG);
-    XML.pushTag(videoNames[lastProcessedIdx + 1]);
-    XML.addTag("FEATURE-MATCHING");
-    XML.pushTag("FEATURE-MATCHING");
-    
-    XML.addTag("COCA-COLA");
-    XML.pushTag("COCA-COLA");
-    
-    for(int i = 0; i < matches.size(); i++) {
-        // Write to XML
-        XML.setValue("DIST", matches[i].distance, i);
+    // Check if there are any descriptors/ keypoints before proceeding
+    if(!(descriptorsObj.empty() || descriptorsScene.empty() || keypointsObj.empty() || keypointsScene.empty())) {
+        
+        //cv::FlannBasedMatcher matcher = cv::FlannBasedMatcher(cv::makePtr<cv::flann::LshIndexParams>(6, 12, 1));
+        cv::BFMatcher matcher(cv::NORM_L2);
+        
+        vector<vector<cv::DMatch> > knnMatches;
+        matcher.knnMatch(descriptorsObj, descriptorsScene, knnMatches, 2);
+        
+        vector<cv::DMatch> goodMatches;
+        
+        // Filter matches according to Lowe's ratio test
+        for(int i = 0; i < knnMatches.size(); i++) {
+            
+            // Safety measure because not all matches have a correspondence using ORB and FLANN
+            if(knnMatches[i].size() >= 2) {
+                if(knnMatches[i][0].distance < MATCH_RATIO_THRESH * knnMatches[i][1].distance) {
+                    goodMatches.push_back(knnMatches[i][0]);
+                }
+            }
+        }
+        
+        if(goodMatches.size() >= MIN_MATCH_COUNT) {
+            objMatchCount++;
+        }
     }
     
-    XML.popTag();
-    XML.popTag();
-    XML.saveFile(METADATA_FILE);
+    /*
+    if(objFound) {
+        vector<cv::Point2f> obj;
+        vector<cv::Point2f> scene;
+        
+        for(int i = 0; i < goodMatches.size(); i++) {
+            obj.push_back(keypointsObj[goodMatches[i].queryIdx].pt);
+            scene.push_back(keypointsScene[goodMatches[i].trainIdx].pt);
+        }
+        
+        cv::Mat h = cv::findHomography(obj, scene, cv::RANSAC);
+    }
+    */
+    
 }
 
 void VideoLibrary::processTexture(ofxCvColorImage colorImg) {

@@ -6,8 +6,11 @@
 
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
+#include "ofxOpenCv.h"
 
 class ContextualPlayer {
+    const string HAAR_CASCADE = "haar_cascades/haarcascade_frontalface_default.xml";
+    
     const string EVT_NUM_FACES = "NUM-FACES";
     const string EVT_MOTION = "MOTION";
     
@@ -24,6 +27,8 @@ class ContextualPlayer {
     ofVideoGrabber camera;
     
     ofVideoPlayer player;
+    
+    ofxCvHaarFinder faceFinder;
     
     float videoAreaXPos, videoAreaYPos;
     float videoAreaWidth, videoAreaHeight;
