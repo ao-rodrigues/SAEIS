@@ -33,6 +33,14 @@ VideoLibrary::VideoLibrary() {
         if(lastProcessedIdx == dir.size() - 1) {
             videosProcessed = true;
         } else {
+            if(lastProcessedIdx > dir.size() - 1) {
+                // This means that one or more videos were removed
+                // Not the best solution, because the program will process every video again,
+                // but it works for now
+                
+                lastProcessedIdx = -1;
+            }
+            
             videosProcessed = false;
         }
         
@@ -287,7 +295,7 @@ void VideoLibrary::key_pressed(int key) {
         player->keyPress(key);
     }
     
-    if((char)key == 'f') {
+    if(key == OF_KEY_F2) {
         fullscreenMode = !fullscreenMode;
         contextualPlayer->setFullscreen(fullscreenMode);
     }
