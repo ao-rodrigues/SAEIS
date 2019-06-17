@@ -61,31 +61,30 @@ void ContextualPlayer::draw() {
     if(!isFullscreen) {
         ofSetColor(ofColor::white);
         camera.draw(camX, camY);
-    }
-    
-    ofNoFill();
-    for(unsigned int i = 0; i < faceFinder.blobs.size(); i++) {
-        ofRectangle cur = faceFinder.blobs[i].boundingRect;
         
-        ofSetColor(ofColor::green);
-        ofDrawRectangle(camX + cur.x, camY + cur.y, cur.width, cur.height);
-    }
-    
-    ofFill();
-    
-    if(objDetected) {
         ofNoFill();
-        
-        ofSetColor(ofColor::blue);
-
-        ofDrawLine(objCoords[0].x, objCoords[0].y, objCoords[1].x, objCoords[1].y);
-        ofDrawLine(objCoords[1].x, objCoords[1].y, objCoords[2].x, objCoords[2].y);
-        ofDrawLine(objCoords[2].x, objCoords[2].y, objCoords[3].x, objCoords[3].y);
-        ofDrawLine(objCoords[3].x, objCoords[3].y, objCoords[0].x, objCoords[0].y);
+        for(unsigned int i = 0; i < faceFinder.blobs.size(); i++) {
+            ofRectangle cur = faceFinder.blobs[i].boundingRect;
+            
+            ofSetColor(ofColor::green);
+            ofDrawRectangle(camX + cur.x, camY + cur.y, cur.width, cur.height);
+        }
         
         ofFill();
+        
+        if(objDetected) {
+            ofNoFill();
+            
+            ofSetColor(ofColor::blue);
+            
+            ofDrawLine(objCoords[0].x, objCoords[0].y, objCoords[1].x, objCoords[1].y);
+            ofDrawLine(objCoords[1].x, objCoords[1].y, objCoords[2].x, objCoords[2].y);
+            ofDrawLine(objCoords[2].x, objCoords[2].y, objCoords[3].x, objCoords[3].y);
+            ofDrawLine(objCoords[3].x, objCoords[3].y, objCoords[0].x, objCoords[0].y);
+            
+            ofFill();
+        }
     }
-    
 }
 
 void ContextualPlayer::setFullscreen(bool setFullscreen) {
