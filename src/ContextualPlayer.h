@@ -25,6 +25,8 @@ class ContextualPlayer {
     
     const uint64_t VIDEO_PLAY_TIME_MILLIS = 5000;
     
+    const int MIN_NUM_FACES = 2;
+    
     ofxXmlSettings behavioursXML;
     ofVideoGrabber camera;
     
@@ -56,11 +58,13 @@ public:
     void setFullscreen(bool setFullscreen);
         
 private:
-    void loadVideo(const string path);
+    void loadVideo(const string videoTag);
     void calculatePlayerDimensions();
     
     void processFrame(ofPixels &pixels);
     
     void detectObject(ofPixels &scenePixels);
     void setupObjectRect(vector<cv::Point2f> objCorners);
+    
+    string getRandomVideoPath(string tag);
 };

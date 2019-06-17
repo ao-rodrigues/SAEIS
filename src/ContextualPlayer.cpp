@@ -26,6 +26,7 @@ ContextualPlayer::ContextualPlayer(string behavioursXml) {
     videoAreaWidth = PLAYER_WIDTH;
     videoAreaHeight = PLAYER_HEIGHT;
     
+    loadVideo("BEHAVIOURS:DEFAULT:VIDEO");
     videoStart = ofGetElapsedTimeMillis();
     
     faceFinder.setup(HAAR_CASCADE);
@@ -107,16 +108,20 @@ void ContextualPlayer::setFullscreen(bool setFullscreen) {
     calculatePlayerDimensions();
 }
 
-void ContextualPlayer::loadVideo(const string path) {
-    if (player.isLoaded()) {
-        player.closeMovie();
+void ContextualPlayer::loadVideo(const string videoTag) {
+    string path = getRandomVideoPath(videoTag);
+    
+    if(!path.empty()) {
+        if (player.isLoaded()) {
+            player.closeMovie();
+        }
+        
+        player.load(path);
+        calculatePlayerDimensions();
+        
+        player.play();
+        videoStart = ofGetElapsedTimeMillis();
     }
-    
-    player.load(path);
-    calculatePlayerDimensions();
-    
-    player.play();
-    videoStart = ofGetElapsedTimeMillis();
 
 }
 
@@ -146,18 +151,18 @@ void ContextualPlayer::calculatePlayerDimensions() {
 }
 
 void ContextualPlayer::processFrame(ofPixels &pixels) {
-    
-    //if(!objDetected) {
-        detectObject(pixels);
-    //}
+    detectObject(pixels);
     faceFinder.findHaarObjects(pixels);
     
     uint64_t currTime = ofGetElapsedTimeMillis();
     
     if(currTime - videoStart > VIDEO_PLAY_TIME_MILLIS) {
         // The video has played for 5 seconds, we can process the camera again
-        videoStart = ofGetElapsedTimeMillis();
         objDetected = false;
+        
+        if(faceFinder.blobs.size() <= MIN_NUM_FACES) {
+            loadVideo("BEHAVIOURS:LOW-NUM-FACES:VIDEO");
+        }
     }
 }
 
@@ -188,9 +193,7 @@ void ContextualPlayer::detectObject(ofPixels &scenePixels) {
         uint64_t currTime = ofGetElapsedTimeMillis();
         if(currTime - videoStart > VIDEO_PLAY_TIME_MILLIS) {
             // The video has played for 5 seconds, we can process the camera again
-            string vidPath = behavioursXML.getValue("BEHAVIOURS:COCA-COLA:VIDEO", "");
-            loadVideo(vidPath);
-            videoStart = ofGetElapsedTimeMillis();
+            loadVideo("BEHAVIOURS:COCA-COLA:VIDEO");
         }
     }
 }
@@ -203,4 +206,13 @@ void ContextualPlayer::setupObjectRect(vector<cv::Point2f> objCorners) {
     }
     
     objDetected = true;
+}
+
+
+string ContextualPlayer::getRandomVideoPath(string tag) {
+    int numTags = behavioursXML.getNumTags(tag);
+    
+    int i = rand() % numTags;
+    
+    return behavioursXML.getValue(tag, "", i);
 }
