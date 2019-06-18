@@ -25,7 +25,8 @@ class ContextualPlayer {
     
     const uint64_t VIDEO_PLAY_TIME_MILLIS = 5000;
     
-    const int MIN_NUM_FACES = 2;
+    const int LOW_NUM_FACES = 2;
+    const int MED_NUM_FACES = 4;
     
     ofxXmlSettings behavioursXML;
     ofVideoGrabber camera;
