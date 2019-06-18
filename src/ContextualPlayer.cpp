@@ -26,7 +26,7 @@ ContextualPlayer::ContextualPlayer(string behavioursXml) {
     videoAreaWidth = PLAYER_WIDTH;
     videoAreaHeight = PLAYER_HEIGHT;
     
-    loadVideo("BEHAVIOURS:DEFAULT:VIDEO");
+    loadVideo("DEFAULT");
     videoStart = ofGetElapsedTimeMillis();
     
     faceFinder.setup(HAAR_CASCADE);
@@ -159,8 +159,16 @@ void ContextualPlayer::processFrame(ofPixels &pixels) {
         // The video has played for 5 seconds, we can process the camera again
         objDetected = false;
         
-        if(faceFinder.blobs.size() <= MIN_NUM_FACES) {
-            loadVideo("BEHAVIOURS:LOW-NUM-FACES:VIDEO");
+        int numFaces = (int)faceFinder.blobs.size();
+        
+        if(numFaces == 0) {
+            loadVideo("DEFAULT");
+        } else if(numFaces <= LOW_NUM_FACES) {
+            loadVideo("LOW-NUM-FACES");
+        } else if(numFaces <= MED_NUM_FACES) {
+            loadVideo("MED-NUM-FACES");
+        } else if(numFaces > MED_NUM_FACES) {
+            loadVideo("HIGH-NUM-FACES");
         }
     }
 }
@@ -192,7 +200,7 @@ void ContextualPlayer::detectObject(ofPixels &scenePixels) {
         uint64_t currTime = ofGetElapsedTimeMillis();
         if(currTime - videoStart > VIDEO_PLAY_TIME_MILLIS) {
             // The video has played for 5 seconds, we can process the camera again
-            loadVideo("BEHAVIOURS:COCA-COLA:VIDEO");
+            loadVideo("COCA-COLA");
         }
     }
 }
@@ -209,9 +217,17 @@ void ContextualPlayer::setupObjectRect(vector<cv::Point2f> objCorners) {
 
 
 string ContextualPlayer::getRandomVideoPath(string tag) {
-    int numTags = behavioursXML.getNumTags(tag);
+    behavioursXML.pushTag("BEHAVIOURS");
+    behavioursXML.pushTag(tag);
+    
+    int numTags = behavioursXML.getNumTags("VIDEO");
     
     int i = rand() % numTags;
     
-    return behavioursXML.getValue(tag, "", i);
+    string path = behavioursXML.getValue("VIDEO", "", i);
+    
+    behavioursXML.popTag();
+    behavioursXML.popTag();
+    
+    return path;
 }
